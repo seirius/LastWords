@@ -7,4 +7,8 @@ public class PositionComponent implements Component {
 
     public Vector2 position;
 
+    public PositionComponent(float xPosition, float yPosition) {
+        this.position = new Vector2(xPosition, yPosition);
+    }
+
 }

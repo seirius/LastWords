@@ -23,7 +23,7 @@ public class LastWords extends ApplicationAdapter {
     @Override
     public void create() {
         spriteBatch = new SpriteBatch();
-        gameStateManager = new GameStateManager();
+        gameStateManager = new GameStateManager(spriteBatch);
         Gdx.gl.glClearColor(0, 0, 0, 1);
         gameStateManager.push(new MenuState(gameStateManager));
     }

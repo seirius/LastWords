@@ -23,7 +23,10 @@ public class VelocitySystem extends EntitySystem {
         for (Entity entity: entities) {
             PositionComponent positionComponent = positionMapper.get(entity);
             VelocityComponent velocityComponent = velocityMapper.get(entity);
-            positionComponent.position.add(velocityComponent.velocity).scl(deltaTime);
+            if (positionComponent.position != null
+                && velocityComponent.velocity != null) {
+                positionComponent.position.add(velocityComponent.velocity).scl(deltaTime);
+            }
         }
     }
 }

@@ -7,4 +7,8 @@ public class VelocityComponent implements Component {
 
     public Vector2 velocity;
 
+    public VelocityComponent(Vector2 velocity) {
+        this.velocity = velocity;
+    }
+
 }

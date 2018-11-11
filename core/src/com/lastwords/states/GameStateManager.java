@@ -11,10 +11,12 @@ public class GameStateManager {
 
     private Stack<State> states;
     private Engine engine;
+    private SpriteBatch spriteBatch;
 
-    public GameStateManager() {
+    public GameStateManager(SpriteBatch spriteBatch) {
         this.engine = new Engine();
         this.states = new Stack<State>();
+        this.spriteBatch = spriteBatch;
     }
 
     public void setMainSystems() {
@@ -39,7 +41,6 @@ public class GameStateManager {
     }
 
     public void update(float dt) {
-        engine.update(dt);
         states.peek().update(dt);
     }
 
@@ -47,4 +48,15 @@ public class GameStateManager {
         states.peek().render(spriteBatch);
     }
 
+    public Engine getEngine() {
+        return engine;
+    }
+
+    public SpriteBatch getSpriteBatch() {
+        return spriteBatch;
+    }
+
+    public void setSpriteBatch(SpriteBatch spriteBatch) {
+        this.spriteBatch = spriteBatch;
+    }
 }
