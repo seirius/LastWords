@@ -31,6 +31,7 @@ public class DrawSystem extends EntitySystem {
     @Override
     public void update(float deltaTime) {
         float textureWidth, textureHeight, xTexture, yTexture;
+        spriteBatch.begin();
         for (Entity entity: entities) {
             PositionComponent positionComponent = positionMapper.get(entity);
             TextureComponent textureComponent = textureMapper.get(entity);
@@ -44,5 +45,6 @@ public class DrawSystem extends EntitySystem {
                         .draw(textureComponent.textureRegion, xTexture, yTexture, textureWidth, textureHeight);
             }
         }
+        spriteBatch.end();
     }
 }
