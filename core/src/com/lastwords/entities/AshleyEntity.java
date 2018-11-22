@@ -6,7 +6,9 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.lastwords.components.animation.AnimationComponent;
+import com.lastwords.components.playerinput.PlayerComponent;
 import com.lastwords.components.position.PositionComponent;
+import com.lastwords.components.stats.StatsComponent;
 import com.lastwords.components.texture.TextureComponent;
 import com.lastwords.components.velocity.VelocityComponent;
 
@@ -16,7 +18,12 @@ public class AshleyEntity extends Entity {
 
     public AshleyEntity(float xPosition, float yPosition, float velocity) {
         this.add(new PositionComponent(xPosition, yPosition));
-        this.add(new VelocityComponent(new Vector2(250, 300)));
+        this.add(new VelocityComponent());
+        StatsComponent statsComponent = new StatsComponent();
+        statsComponent.speed = 60;
+        this.add(statsComponent);
+        this.add(new PlayerComponent());
+
 
         Texture texture = new Texture("micro/PNG/Human/human_regular_bald.png");
         TextureRegion[][] tmp = TextureRegion
