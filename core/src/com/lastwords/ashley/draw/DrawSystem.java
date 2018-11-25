@@ -1,10 +1,10 @@
-package com.lastwords.components.draw;
+package com.lastwords.ashley.draw;
 
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.lastwords.components.position.PositionComponent;
-import com.lastwords.components.texture.TextureComponent;
+import com.lastwords.ashley.position.PositionComponent;
+import com.lastwords.ashley.texture.TextureComponent;
 
 public class DrawSystem extends EntitySystem {
 

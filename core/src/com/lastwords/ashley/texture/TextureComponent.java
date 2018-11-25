@@ -1,4 +1,4 @@
-package com.lastwords.components.texture;
+package com.lastwords.ashley.texture;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;

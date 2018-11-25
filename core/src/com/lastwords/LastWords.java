@@ -16,6 +16,8 @@ public class LastWords extends ApplicationAdapter {
     public static final String TITLE = "LastWords";
     public static final int WIDTH = 1200;
     public static final int HEIGHT = 720;
+    public static final float SCALE = 1.8f;
+
 
     private SpriteBatch spriteBatch;
     private GameStateManager gameStateManager;
@@ -40,4 +42,8 @@ public class LastWords extends ApplicationAdapter {
         super.dispose();
     }
 
+    @Override
+    public void resize(int width, int height) {
+        gameStateManager.resize(width, height);
+    }
 }

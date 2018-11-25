@@ -51,6 +51,11 @@ public class MenuState extends State {
     }
 
     @Override
+    public void resize(int width, int height) {
+
+    }
+
+    @Override
     public void dispose() {
         background1.dispose();
         System.out.println("MenuState disposed");

@@ -1,4 +1,4 @@
-package com.lastwords.components.stats;
+package com.lastwords.ashley.stats;
 
 import com.badlogic.ashley.core.Component;
 

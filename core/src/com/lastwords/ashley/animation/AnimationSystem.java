@@ -1,8 +1,8 @@
-package com.lastwords.components.animation;
+package com.lastwords.ashley.animation;
 
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.lastwords.components.texture.TextureComponent;
+import com.lastwords.ashley.texture.TextureComponent;
 
 public class AnimationSystem extends EntitySystem {
 

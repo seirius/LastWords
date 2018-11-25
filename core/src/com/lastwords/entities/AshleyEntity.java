@@ -5,22 +5,33 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.lastwords.components.animation.AnimationComponent;
-import com.lastwords.components.playerinput.PlayerComponent;
-import com.lastwords.components.position.PositionComponent;
-import com.lastwords.components.stats.StatsComponent;
-import com.lastwords.components.texture.TextureComponent;
-import com.lastwords.components.velocity.VelocityComponent;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.lastwords.ashley.animation.AnimationComponent;
+import com.lastwords.ashley.body.BodyComponent;
+import com.lastwords.ashley.playerinput.PlayerComponent;
+import com.lastwords.ashley.position.PositionComponent;
+import com.lastwords.ashley.stats.StatsComponent;
+import com.lastwords.ashley.texture.TextureComponent;
+import com.lastwords.ashley.velocity.VelocityComponent;
+import com.lastwords.ashley.world.AddToWorldComponent;
 
 public class AshleyEntity extends Entity {
 
     private static final int FRAME_COLS = 9, FRAME_ROWS = 2;
 
-    public AshleyEntity(float xPosition, float yPosition, float velocity) {
+    public AshleyEntity(float xPosition, float yPosition, float speed) {
+        CircleShape circleShape = new CircleShape();
+        circleShape.setRadius(6);
+        this.add(new BodyComponent(
+                new Vector2(xPosition, yPosition),
+                BodyDef.BodyType.DynamicBody, circleShape
+        ));
+        this.add(new AddToWorldComponent());
         this.add(new PositionComponent(xPosition, yPosition));
         this.add(new VelocityComponent());
         StatsComponent statsComponent = new StatsComponent();
-        statsComponent.speed = 60;
+        statsComponent.speed = speed;
         this.add(statsComponent);
         this.add(new PlayerComponent());
 

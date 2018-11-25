@@ -1,4 +1,4 @@
-package com.lastwords.components.position;
+package com.lastwords.ashley.position;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;

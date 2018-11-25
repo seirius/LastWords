@@ -1,4 +1,4 @@
-package com.lastwords.components.playerinput;
+package com.lastwords.ashley.playerinput;
 
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
@@ -6,20 +6,20 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.lastwords.components.stats.StatsComponent;
-import com.lastwords.components.velocity.VelocityComponent;
+import com.lastwords.ashley.stats.StatsComponent;
+import com.lastwords.ashley.velocity.VelocityComponent;
 
 public class PlayerInputSystem extends EntitySystem {
 
-    public static final float RAD_ANGLE_RIGHT = 0;
-    public static final float RAD_ANGLE_DOWN = MathUtils.degreesToRadians * 270f;
-    public static final float RAD_ANGLE_LEFT = MathUtils.degreesToRadians * 180f;
-    public static final float RAD_ANGLE_UP = MathUtils.degreesToRadians * 90f;
+    private static final float RAD_ANGLE_RIGHT = 0;
+    private static final float RAD_ANGLE_DOWN = MathUtils.degreesToRadians * 270f;
+    private static final float RAD_ANGLE_LEFT = MathUtils.degreesToRadians * 180f;
+    private static final float RAD_ANGLE_UP = MathUtils.degreesToRadians * 90f;
 
-    public static final Vector2 RIGHT_V = new Vector2(MathUtils.cos(RAD_ANGLE_RIGHT), MathUtils.sin(RAD_ANGLE_RIGHT));
-    public static final Vector2 DOWN_V = new Vector2(MathUtils.cos(RAD_ANGLE_DOWN), MathUtils.sin(RAD_ANGLE_DOWN));
-    public static final Vector2 UP_V = new Vector2(MathUtils.cos(RAD_ANGLE_UP), MathUtils.sin(RAD_ANGLE_UP));
-    public static final Vector2 LEFT_V = new Vector2(MathUtils.cos(RAD_ANGLE_LEFT), MathUtils.sin(RAD_ANGLE_LEFT));
+    private static final Vector2 RIGHT_V = new Vector2(MathUtils.cos(RAD_ANGLE_RIGHT), MathUtils.sin(RAD_ANGLE_RIGHT));
+    private static final Vector2 DOWN_V = new Vector2(MathUtils.cos(RAD_ANGLE_DOWN), MathUtils.sin(RAD_ANGLE_DOWN));
+    private static final Vector2 UP_V = new Vector2(MathUtils.cos(RAD_ANGLE_UP), MathUtils.sin(RAD_ANGLE_UP));
+    private static final Vector2 LEFT_V = new Vector2(MathUtils.cos(RAD_ANGLE_LEFT), MathUtils.sin(RAD_ANGLE_LEFT));
 
     private ImmutableArray<Entity> entities;
 

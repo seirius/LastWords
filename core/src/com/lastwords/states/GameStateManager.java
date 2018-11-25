@@ -3,7 +3,7 @@ package com.lastwords.states;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.lastwords.components.velocity.VelocitySystem;
+import com.lastwords.ashley.velocity.VelocitySystem;
 
 import java.util.Stack;
 
@@ -58,5 +58,9 @@ public class GameStateManager {
 
     public void setSpriteBatch(SpriteBatch spriteBatch) {
         this.spriteBatch = spriteBatch;
+    }
+
+    public void resize(int width, int height) {
+        states.peek().resize(width, height);
     }
 }

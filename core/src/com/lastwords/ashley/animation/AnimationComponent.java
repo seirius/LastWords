@@ -1,4 +1,4 @@
-package com.lastwords.components.animation;
+package com.lastwords.ashley.animation;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.g2d.Animation;
