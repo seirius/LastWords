@@ -5,7 +5,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.lastwords.LastWords;
 import com.lastwords.ashley.animation.AnimationSystem;
 import com.lastwords.ashley.draw.DrawSystem;
-import com.lastwords.ashley.playerinput.PlayerInputSystem;
+import com.lastwords.ashley.entities.CastSystem;
+import com.lastwords.ashley.velocity.InputToVelocity;
 import com.lastwords.ashley.velocity.VelocitySystem;
 import com.lastwords.ashley.world.WorldSystem;
 import com.lastwords.entities.AshleyEntity;
@@ -24,11 +25,12 @@ public class PlayState extends State {
         worldSystem = new WorldSystem();
         this.engine = gameStateManager.getEngine();
         this.engine.addSystem(worldSystem);
-        this.engine.addSystem(new PlayerInputSystem());
+        this.engine.addSystem(new InputToVelocity());
+        this.engine.addSystem(new CastSystem());
         this.engine.addSystem(new DrawSystem(gameStateManager.getSpriteBatch()));
         this.engine.addSystem(new VelocitySystem());
         this.engine.addSystem(new AnimationSystem());
-        ashleyEntity = new AshleyEntity(16, 16, 1000);
+        ashleyEntity = new AshleyEntity(16, 16, 30);
         this.engine.addEntity(ashleyEntity);
     }
 

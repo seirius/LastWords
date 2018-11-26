@@ -9,6 +9,8 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.lastwords.ashley.animation.AnimationComponent;
 import com.lastwords.ashley.body.BodyComponent;
+import com.lastwords.ashley.entities.CastComponent;
+import com.lastwords.ashley.entities.EntityStateComponent;
 import com.lastwords.ashley.playerinput.PlayerComponent;
 import com.lastwords.ashley.position.PositionComponent;
 import com.lastwords.ashley.stats.StatsComponent;
@@ -23,25 +25,27 @@ public class AshleyEntity extends Entity {
     public AshleyEntity(float xPosition, float yPosition, float speed) {
         CircleShape circleShape = new CircleShape();
         circleShape.setRadius(6);
-        this.add(new BodyComponent(
+        add(new BodyComponent(
                 new Vector2(xPosition, yPosition),
                 BodyDef.BodyType.DynamicBody, circleShape
         ));
-        this.add(new AddToWorldComponent());
-        this.add(new PositionComponent(xPosition, yPosition));
-        this.add(new VelocityComponent());
+        add(new CastComponent());
+        add(new AddToWorldComponent());
+        add(new PositionComponent(xPosition, yPosition));
+        add(new VelocityComponent());
+        add(new EntityStateComponent());
         StatsComponent statsComponent = new StatsComponent();
         statsComponent.speed = speed;
-        this.add(statsComponent);
-        this.add(new PlayerComponent());
+        add(statsComponent);
+        add(new PlayerComponent());
 
 
         Texture texture = new Texture("micro/PNG/Human/human_regular_bald.png");
         TextureRegion[][] tmp = TextureRegion
                 .split(texture, texture.getWidth() / FRAME_COLS, texture.getHeight() / FRAME_ROWS);
         TextureRegion[] textureRegions = {tmp[0][0], tmp[0][1], tmp[0][2]};
-        this.add(new AnimationComponent(new Animation<TextureRegion>(0.2f, textureRegions)));
-        this.add(new TextureComponent());
+        add(new AnimationComponent(new Animation<TextureRegion>(0.2f, textureRegions)));
+        add(new TextureComponent());
     }
 
 }
