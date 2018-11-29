@@ -42,6 +42,18 @@ public class CastSystem extends EntitySystem {
                 if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
                     castComponent.castPile.add(Input.Keys.R);
                 }
+                if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
+                    castComponent.castPile.add(Input.Keys.A);
+                }
+                if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+                    castComponent.castPile.add(Input.Keys.S);
+                }
+                if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+                    castComponent.castPile.add(Input.Keys.D);
+                }
+                if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
+                    castComponent.castPile.add(Input.Keys.F);
+                }
 
                 if (Gdx.input.justTouched() && castComponent.castPile.size() > 0) {
                     StringBuilder casted = new StringBuilder();
