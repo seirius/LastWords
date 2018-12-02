@@ -69,7 +69,7 @@ class InputToVelocitySystem : EntitySystem() {
         private val UP_V = Vector2(MathUtils.cos(RAD_ANGLE_UP), MathUtils.sin(RAD_ANGLE_UP))
         private val LEFT_V = Vector2(MathUtils.cos(RAD_ANGLE_LEFT), MathUtils.sin(RAD_ANGLE_LEFT))
 
-        private val SPEED_MULTIPLIER = 100f
+        public const val SPEED_MULTIPLIER = 100f
     }
 
 }

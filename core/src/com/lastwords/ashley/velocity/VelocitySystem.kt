@@ -22,12 +22,14 @@ class VelocitySystem : EntitySystem() {
         for (entity in entities!!) {
             val velocityComponent = velocityMapper.get(entity)
             val bodyComponent = bodyMapper.get(entity)
-            val body = bodyComponent.body
-            if (!velocityComponent.velocity.isZero) {
-                val finalVelocity = velocityComponent.velocity.cpy().scl(deltaTime)
-                body!!.linearVelocity = finalVelocity
-            } else {
-                body!!.linearVelocity = Vector2.Zero
+            val body = bodyComponent?.body
+            if (body != null) {
+                if (!velocityComponent.velocity.isZero) {
+                    val finalVelocity = velocityComponent.velocity.cpy().scl(deltaTime)
+                    body.linearVelocity = finalVelocity
+                } else {
+                    body.linearVelocity = Vector2.Zero
+                }
             }
         }
     }

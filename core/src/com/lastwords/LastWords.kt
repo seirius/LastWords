@@ -9,11 +9,13 @@ import com.lastwords.states.PlayState
 
 class LastWords : ApplicationAdapter() {
 
-    private var spriteBatch: SpriteBatch = SpriteBatch()
-    private var gameStateManager: GameStateManager = GameStateManager(spriteBatch)
+    private lateinit var spriteBatch: SpriteBatch
+    private lateinit var gameStateManager: GameStateManager
 
     override fun create() {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
+        spriteBatch = SpriteBatch()
+        gameStateManager = GameStateManager(spriteBatch)
         gameStateManager.push(PlayState(gameStateManager))
         //        gameStateManager.push(new MenuState(gameStateManager));
     }

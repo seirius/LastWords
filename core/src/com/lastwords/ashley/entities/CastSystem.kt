@@ -4,17 +4,23 @@ import com.badlogic.ashley.core.*
 import com.badlogic.ashley.utils.ImmutableArray
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
+import com.badlogic.gdx.physics.box2d.World
+import com.lastwords.ashley.position.PositionComponent
+import com.lastwords.entities.Projectile
+import com.lastwords.states.State
 
-class CastSystem : EntitySystem() {
+class CastSystem(private var state: State) : EntitySystem() {
 
     private var entities: ImmutableArray<Entity>? = null
 
     private val castMapper = ComponentMapper.getFor(CastComponent::class.java)
     private val entityStateMapper = ComponentMapper.getFor(EntityStateComponent::class.java)
+    private val positionMapper = ComponentMapper.getFor(PositionComponent::class.java)
 
     override fun addedToEngine(engine: Engine?) {
         entities = engine!!
-                .getEntitiesFor(Family.all(CastComponent::class.java, EntityStateComponent::class.java).get())
+                .getEntitiesFor(Family
+                        .all(CastComponent::class.java, EntityStateComponent::class.java, PositionComponent::class.java).get())
     }
 
     override fun update(deltaTime: Float) {
@@ -56,6 +62,13 @@ class CastSystem : EntitySystem() {
                     }
                     println(casted)
                     castComponent.castPile.clear()
+
+                    val positionComponent = positionMapper.get(entity)
+
+                    val targetPosition = state.getWorldMousePosition()
+                    val originPosition = positionComponent.position.cpy()
+
+                    engine.addEntity(Projectile(originPosition, targetPosition, 20f))
                 }
             }
         }

@@ -11,7 +11,7 @@ class BodyComponent(
 ) : Component {
 
     var body: Body? = null
-    var bodyDef: BodyDef? = null
+    private var bodyDef: BodyDef? = null
     var fixture: Fixture? = null
 
     fun initBody(world: World) {

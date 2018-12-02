@@ -6,6 +6,7 @@ import com.lastwords.LastWords
 import com.lastwords.ashley.animation.AnimationSystem
 import com.lastwords.ashley.draw.DrawSystem
 import com.lastwords.ashley.entities.CastSystem
+import com.lastwords.ashley.move.MoveToTargetSystem
 import com.lastwords.ashley.velocity.InputToVelocitySystem
 import com.lastwords.ashley.velocity.VelocitySystem
 import com.lastwords.ashley.world.WorldSystem
@@ -22,15 +23,16 @@ class PlayState(gameStateManager: GameStateManager) : State(gameStateManager) {
     init {
         camera.setToOrtho(false, LastWords.WIDTH / LastWords.SCALE, LastWords.HEIGHT / LastWords.SCALE)
         worldSystem = WorldSystem()
-        this.engine = gameStateManager.engine
-        this.engine.addSystem(worldSystem)
-        this.engine.addSystem(InputToVelocitySystem())
-        this.engine.addSystem(CastSystem())
-        this.engine.addSystem(DrawSystem(gameStateManager.spriteBatch))
-        this.engine.addSystem(VelocitySystem())
-        this.engine.addSystem(AnimationSystem())
+        engine = gameStateManager.engine
+        engine.addSystem(worldSystem)
+        engine.addSystem(InputToVelocitySystem())
+        engine.addSystem(CastSystem(this))
+        engine.addSystem(MoveToTargetSystem())
+        engine.addSystem(DrawSystem(gameStateManager.spriteBatch))
+        engine.addSystem(VelocitySystem())
+        engine.addSystem(AnimationSystem())
         ashleyEntity = AshleyEntity(16f, 16f, 30f)
-        this.engine.addEntity(ashleyEntity)
+        engine.addEntity(ashleyEntity)
     }
 
     override fun handleInput() {

@@ -39,9 +39,9 @@ class WorldSystem : EntitySystem() {
         for (entity in entitiesWithPosition!!) {
             val bodyComponent = bodyMapper.get(entity)
             val positionComponent = positionMapper.get(entity)
-            val body = bodyComponent.body
-            if (body!!.position != positionComponent.position) {
-                positionComponent.position = body.position
+            val bodyPosition = bodyComponent.body?.position
+            if (bodyPosition != null && bodyPosition != positionComponent.position) {
+                positionComponent.position = bodyPosition
             }
         }
 
