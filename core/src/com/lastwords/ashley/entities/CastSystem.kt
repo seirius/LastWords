@@ -68,7 +68,7 @@ class CastSystem(private var state: State) : EntitySystem() {
                     val targetPosition = state.getWorldMousePosition()
                     val originPosition = positionComponent.position.cpy()
 
-                    engine.addEntity(Projectile(originPosition, targetPosition, 20f))
+                    engine.addEntity(Projectile(originPosition, targetPosition, 30f))
                 }
             }
         }

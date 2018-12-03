@@ -11,17 +11,19 @@ class BodyComponent(
 ) : Component {
 
     var body: Body? = null
-    private var bodyDef: BodyDef? = null
-    var fixture: Fixture? = null
+    private lateinit var bodyDef: BodyDef
+    private lateinit var fixture: Fixture
+    public lateinit var world: World
 
     fun initBody(world: World) {
+        this.world = world
         bodyDef = BodyDef()
-        bodyDef!!.type = bodyType
+        bodyDef.type = bodyType
         bodyType = null
-        bodyDef!!.position.set(initPosition!!.cpy())
+        bodyDef.position.set(initPosition!!.cpy())
         initPosition = null
 
-        body = world.createBody(bodyDef!!)
+        body = world.createBody(bodyDef)
 
         val fixtureDef = FixtureDef()
         fixtureDef.shape = shape
@@ -31,5 +33,9 @@ class BodyComponent(
 
         shape!!.dispose()
         shape = null
+    }
+
+    fun die() {
+        world.destroyBody(body)
     }
 }

@@ -5,6 +5,8 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.CircleShape
 import com.lastwords.ashley.body.BodyComponent
+import com.lastwords.ashley.deathcondition.DistanceLimitComponent
+import com.lastwords.ashley.deathcondition.TimeLimitComponent
 import com.lastwords.ashley.move.ToTargetComponent
 import com.lastwords.ashley.position.PositionComponent
 import com.lastwords.ashley.stats.StatsComponent
@@ -19,17 +21,17 @@ class Projectile(
 
 
     init {
-        System.out.println("Projectiles fired")
-        val circleChape = CircleShape()
-        circleChape.radius = 3f
+        val circleShape = CircleShape()
+        circleShape.radius = 3f
         val statsComponent = StatsComponent()
-        statsComponent.speed = 40f
+        statsComponent.speed = speed
         add(statsComponent)
-        add(BodyComponent(initPosition, BodyDef.BodyType.DynamicBody, circleChape))
+        add(BodyComponent(initPosition, BodyDef.BodyType.DynamicBody, circleShape))
         add(AddToWorldComponent())
         add(PositionComponent(initPosition.x, initPosition.y))
         add(ToTargetComponent(targetPosition))
         add(VelocityComponent())
+        add(DistanceLimitComponent(200f, initPosition))
     }
 
 }

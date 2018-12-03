@@ -11,7 +11,7 @@ import com.lastwords.ashley.position.PositionComponent
 
 class WorldSystem : EntitySystem() {
 
-    val world: World = World(Vector2.Zero, true)
+    private val world: World = World(Vector2.Zero, true)
     private val renderer: Box2DDebugRenderer = Box2DDebugRenderer()
 
     private var entitiesToAdd: ImmutableArray<Entity>? = null
@@ -51,4 +51,5 @@ class WorldSystem : EntitySystem() {
     fun render(combined: Matrix4) {
         renderer.render(world, combined)
     }
+
 }

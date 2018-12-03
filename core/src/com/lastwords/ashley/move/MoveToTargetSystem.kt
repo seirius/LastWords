@@ -21,10 +21,10 @@ class MoveToTargetSystem: EntitySystem() {
     override fun addedToEngine(engine: Engine?) {
         entities = engine!!.getEntitiesFor(Family
                 .all(
-                        VelocityComponent::class.java,
-                        ToTargetComponent::class.java,
-                        PositionComponent::class.java,
-                        StatsComponent::class.java
+                    VelocityComponent::class.java,
+                    ToTargetComponent::class.java,
+                    PositionComponent::class.java,
+                    StatsComponent::class.java
                 ).get())
     }
 

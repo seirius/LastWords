@@ -4,8 +4,11 @@ import com.badlogic.ashley.core.Engine
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.lastwords.LastWords
 import com.lastwords.ashley.animation.AnimationSystem
+import com.lastwords.ashley.death.DeathSystem
 import com.lastwords.ashley.draw.DrawSystem
 import com.lastwords.ashley.entities.CastSystem
+import com.lastwords.ashley.deathcondition.DistanceLimitSystem
+import com.lastwords.ashley.deathcondition.TimeLimitSystem
 import com.lastwords.ashley.move.MoveToTargetSystem
 import com.lastwords.ashley.velocity.InputToVelocitySystem
 import com.lastwords.ashley.velocity.VelocitySystem
@@ -13,7 +16,7 @@ import com.lastwords.ashley.world.WorldSystem
 import com.lastwords.entities.AshleyEntity
 import com.lastwords.entities.Player
 
-class PlayState(gameStateManager: GameStateManager) : State(gameStateManager) {
+class PlayState(gameStateManager: GameStateManager): State(gameStateManager) {
 
     private val player: Player? = null
     private val ashleyEntity: AshleyEntity
@@ -24,6 +27,7 @@ class PlayState(gameStateManager: GameStateManager) : State(gameStateManager) {
         camera.setToOrtho(false, LastWords.WIDTH / LastWords.SCALE, LastWords.HEIGHT / LastWords.SCALE)
         worldSystem = WorldSystem()
         engine = gameStateManager.engine
+        engine.addSystem(DeathSystem())
         engine.addSystem(worldSystem)
         engine.addSystem(InputToVelocitySystem())
         engine.addSystem(CastSystem(this))
@@ -31,6 +35,8 @@ class PlayState(gameStateManager: GameStateManager) : State(gameStateManager) {
         engine.addSystem(DrawSystem(gameStateManager.spriteBatch))
         engine.addSystem(VelocitySystem())
         engine.addSystem(AnimationSystem())
+        engine.addSystem(DistanceLimitSystem())
+        engine.addSystem(TimeLimitSystem())
         ashleyEntity = AshleyEntity(16f, 16f, 30f)
         engine.addEntity(ashleyEntity)
     }
@@ -40,7 +46,7 @@ class PlayState(gameStateManager: GameStateManager) : State(gameStateManager) {
     }
 
     override fun update(dt: Float) {
-        this.engine.update(dt)
+        engine.update(dt)
         //        player.update(dt);
     }
 
