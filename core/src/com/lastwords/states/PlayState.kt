@@ -10,6 +10,7 @@ import com.lastwords.ashley.draw.DrawSystem
 import com.lastwords.ashley.entities.CastSystem
 import com.lastwords.ashley.deathcondition.DistanceLimitSystem
 import com.lastwords.ashley.deathcondition.TimeLimitSystem
+import com.lastwords.ashley.draw.TextSystem
 import com.lastwords.ashley.move.MoveToTargetSystem
 import com.lastwords.ashley.stats.StatsSystem
 import com.lastwords.ashley.velocity.InputToVelocitySystem
@@ -40,6 +41,7 @@ class PlayState(gameStateManager: GameStateManager): State(gameStateManager) {
         engine.addSystem(TimeLimitSystem())
         engine.addSystem(DeathSystem())
         engine.addSystem(DrawSystem(gameStateManager.spriteBatch))
+        engine.addSystem(TextSystem(gameStateManager.spriteBatch))
         engine.addSystem(AnimationSystem())
         ashleyEntity = AshleyEntity(16f, 16f, 30f)
         engine.addEntity(ashleyEntity)
@@ -52,7 +54,6 @@ class PlayState(gameStateManager: GameStateManager): State(gameStateManager) {
 
     override fun update(dt: Float) {
         engine.update(dt)
-        //        player.update(dt);
     }
 
     override fun render(spriteBatch: SpriteBatch?) {

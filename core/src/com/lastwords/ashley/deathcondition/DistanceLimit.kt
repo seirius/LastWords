@@ -21,7 +21,6 @@ class DistanceLimitSystem: EntitySystem() {
 
     private val positionMapper = ComponentMapper.getFor(PositionComponent::class.java)
     private val distanceLimitMapper = ComponentMapper.getFor(DistanceLimitComponent::class.java)
-    private val bodyMapper = ComponentMapper.getFor(BodyComponent::class.java)
 
     override fun addedToEngine(engine: Engine?) {
         entities = engine!!.getEntitiesFor(Family.all(PositionComponent::class.java, DistanceLimitComponent::class.java).get())

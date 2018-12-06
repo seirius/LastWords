@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.World
 import com.lastwords.ashley.position.PositionComponent
 import com.lastwords.ashley.stats.PropertiesComponent
 import com.lastwords.entities.Projectile
+import com.lastwords.entities.indicators.DamageIndicator
 import com.lastwords.states.State
 
 class CastSystem(private var state: State) : EntitySystem() {

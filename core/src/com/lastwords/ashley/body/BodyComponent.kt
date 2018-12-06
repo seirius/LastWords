@@ -44,3 +44,5 @@ class BodyComponent(
         world.destroyBody(body)
     }
 }
+
+class NoBodyComponent: Component
