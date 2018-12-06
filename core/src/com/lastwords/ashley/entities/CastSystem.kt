@@ -4,8 +4,11 @@ import com.badlogic.ashley.core.*
 import com.badlogic.ashley.utils.ImmutableArray
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
+import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
 import com.lastwords.ashley.position.PositionComponent
+import com.lastwords.ashley.stats.PropertiesComponent
 import com.lastwords.entities.Projectile
 import com.lastwords.states.State
 
@@ -16,11 +19,13 @@ class CastSystem(private var state: State) : EntitySystem() {
     private val castMapper = ComponentMapper.getFor(CastComponent::class.java)
     private val entityStateMapper = ComponentMapper.getFor(EntityStateComponent::class.java)
     private val positionMapper = ComponentMapper.getFor(PositionComponent::class.java)
+    private val propertiesMapper = ComponentMapper.getFor(PropertiesComponent::class.java)
 
     override fun addedToEngine(engine: Engine?) {
         entities = engine!!
                 .getEntitiesFor(Family
-                        .all(CastComponent::class.java, EntityStateComponent::class.java, PositionComponent::class.java).get())
+                        .all(CastComponent::class.java, EntityStateComponent::class.java,
+                                PropertiesComponent::class.java, PositionComponent::class.java).get())
     }
 
     override fun update(deltaTime: Float) {
@@ -68,7 +73,7 @@ class CastSystem(private var state: State) : EntitySystem() {
                     val targetPosition = state.getWorldMousePosition()
                     val originPosition = positionComponent.position.cpy()
 
-                    engine.addEntity(Projectile(originPosition, targetPosition, 30f))
+                    engine.addEntity(Projectile(originPosition, targetPosition, 30f, propertiesMapper.get(entity).width / 2))
                 }
             }
         }

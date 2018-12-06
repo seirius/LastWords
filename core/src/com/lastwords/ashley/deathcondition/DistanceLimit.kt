@@ -40,7 +40,6 @@ class DistanceLimitSystem: EntitySystem() {
                 val currentPosition = positionComponent.position
                 distanceLimitComponent.distanceDone += Math.abs(distancePosition.dst(currentPosition.x, currentPosition.y))
                 distanceLimitComponent.position = positionComponent.position.cpy()
-                System.out.println(distanceLimitComponent.distanceDone)
                 if (distanceLimitComponent.distanceDone >= distanceLimitComponent.distance) {
                     entity.add(DeathComponent())
                 }

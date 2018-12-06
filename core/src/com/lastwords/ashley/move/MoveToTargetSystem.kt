@@ -2,12 +2,12 @@ package com.lastwords.ashley.move
 
 import com.badlogic.ashley.core.*
 import com.badlogic.ashley.utils.ImmutableArray
-import com.badlogic.gdx.math.MathUtils
-import com.badlogic.gdx.math.Vector2
 import com.lastwords.ashley.position.PositionComponent
 import com.lastwords.ashley.stats.StatsComponent
 import com.lastwords.ashley.velocity.InputToVelocitySystem
 import com.lastwords.ashley.velocity.VelocityComponent
+import com.lastwords.util.angleMagnitudeToVector
+import com.lastwords.util.angleToTarget
 
 class MoveToTargetSystem: EntitySystem() {
 
@@ -35,11 +35,10 @@ class MoveToTargetSystem: EntitySystem() {
             val positionComponent = positionMapper.get(entity)
             val statsComponent = statsMapper.get(entity)
 
-            val angle = MathUtils.atan2(toTargetComponent.targetPosition.y - positionComponent.position.y,
-                    toTargetComponent.targetPosition.x - positionComponent.position.x)
+            val angle = positionComponent.position.angleToTarget(toTargetComponent.targetPosition)
             val finalSpeed = statsComponent.speed * InputToVelocitySystem.SPEED_MULTIPLIER
 
-            velocityComponent.velocity = Vector2(MathUtils.cos(angle), MathUtils.sin(angle)).scl(finalSpeed)
+            velocityComponent.velocity = angleMagnitudeToVector(angle, finalSpeed)
             entity.remove(ToTargetComponent::class.java)
         }
     }

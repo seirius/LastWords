@@ -2,6 +2,7 @@ package com.lastwords.states
 
 import com.badlogic.ashley.core.Engine
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.math.Vector2
 import com.lastwords.LastWords
 import com.lastwords.ashley.animation.AnimationSystem
 import com.lastwords.ashley.death.DeathSystem
@@ -15,6 +16,7 @@ import com.lastwords.ashley.velocity.VelocitySystem
 import com.lastwords.ashley.world.WorldSystem
 import com.lastwords.entities.AshleyEntity
 import com.lastwords.entities.Player
+import com.lastwords.entities.Prometheus
 
 class PlayState(gameStateManager: GameStateManager): State(gameStateManager) {
 
@@ -39,6 +41,7 @@ class PlayState(gameStateManager: GameStateManager): State(gameStateManager) {
         engine.addSystem(TimeLimitSystem())
         ashleyEntity = AshleyEntity(16f, 16f, 30f)
         engine.addEntity(ashleyEntity)
+        engine.addEntity(Prometheus(Vector2(200f, 200f)))
     }
 
     override fun handleInput() {

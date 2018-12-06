@@ -4,12 +4,24 @@ import com.badlogic.ashley.core.*
 import com.badlogic.ashley.utils.ImmutableArray
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer
-import com.badlogic.gdx.physics.box2d.World
+import com.badlogic.gdx.physics.box2d.*
 import com.lastwords.ashley.body.BodyComponent
 import com.lastwords.ashley.position.PositionComponent
 
-class WorldSystem : EntitySystem() {
+class WorldSystem : EntitySystem(), ContactListener {
+
+    override fun endContact(contact: Contact?) {
+        System.out.println(contact?.fixtureA?.userData?.javaClass?.name)
+    }
+
+    override fun beginContact(contact: Contact?) {
+    }
+
+    override fun preSolve(contact: Contact?, oldManifold: Manifold?) {
+    }
+
+    override fun postSolve(contact: Contact?, impulse: ContactImpulse?) {
+    }
 
     private val world: World = World(Vector2.Zero, true)
     private val renderer: Box2DDebugRenderer = Box2DDebugRenderer()
@@ -19,6 +31,10 @@ class WorldSystem : EntitySystem() {
 
     private val bodyMapper = ComponentMapper.getFor(BodyComponent::class.java)
     private val positionMapper = ComponentMapper.getFor(PositionComponent::class.java)
+
+    init {
+        world.setContactListener(this)
+    }
 
     override fun addedToEngine(engine: Engine?) {
         entitiesToAdd = engine!!.getEntitiesFor(Family
