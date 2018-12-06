@@ -32,6 +32,7 @@ class AshleyEntity(xPosition: Float, yPosition: Float, speed: Float) : Entity() 
         add(EntityStateComponent())
         val statsComponent = StatsComponent()
         statsComponent.speed = speed
+        statsComponent.healthPoints = 5
         add(statsComponent)
         add(PlayerComponent())
     }

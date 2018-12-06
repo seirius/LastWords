@@ -11,6 +11,7 @@ import com.lastwords.ashley.entities.CastSystem
 import com.lastwords.ashley.deathcondition.DistanceLimitSystem
 import com.lastwords.ashley.deathcondition.TimeLimitSystem
 import com.lastwords.ashley.move.MoveToTargetSystem
+import com.lastwords.ashley.stats.StatsSystem
 import com.lastwords.ashley.velocity.InputToVelocitySystem
 import com.lastwords.ashley.velocity.VelocitySystem
 import com.lastwords.ashley.world.WorldSystem
@@ -29,16 +30,17 @@ class PlayState(gameStateManager: GameStateManager): State(gameStateManager) {
         camera.setToOrtho(false, LastWords.WIDTH / LastWords.SCALE, LastWords.HEIGHT / LastWords.SCALE)
         worldSystem = WorldSystem()
         engine = gameStateManager.engine
-        engine.addSystem(DeathSystem())
         engine.addSystem(worldSystem)
         engine.addSystem(InputToVelocitySystem())
         engine.addSystem(CastSystem(this))
         engine.addSystem(MoveToTargetSystem())
-        engine.addSystem(DrawSystem(gameStateManager.spriteBatch))
         engine.addSystem(VelocitySystem())
-        engine.addSystem(AnimationSystem())
+        engine.addSystem(StatsSystem())
         engine.addSystem(DistanceLimitSystem())
         engine.addSystem(TimeLimitSystem())
+        engine.addSystem(DeathSystem())
+        engine.addSystem(DrawSystem(gameStateManager.spriteBatch))
+        engine.addSystem(AnimationSystem())
         ashleyEntity = AshleyEntity(16f, 16f, 30f)
         engine.addEntity(ashleyEntity)
         engine.addEntity(Prometheus(Vector2(200f, 200f)))

@@ -32,6 +32,7 @@ class Prometheus(
         add(EntityStateComponent())
         val statsComponent = StatsComponent()
         statsComponent.speed = 5f
+        statsComponent.healthPoints = 5
         add(statsComponent)
     }
 

@@ -10,27 +10,16 @@ import com.lastwords.ashley.position.PositionComponent
 
 class WorldSystem : EntitySystem(), ContactListener {
 
-    override fun endContact(contact: Contact?) {
-        System.out.println(contact?.fixtureA?.userData?.javaClass?.name)
-    }
-
-    override fun beginContact(contact: Contact?) {
-    }
-
-    override fun preSolve(contact: Contact?, oldManifold: Manifold?) {
-    }
-
-    override fun postSolve(contact: Contact?, impulse: ContactImpulse?) {
-    }
-
     private val world: World = World(Vector2.Zero, true)
     private val renderer: Box2DDebugRenderer = Box2DDebugRenderer()
 
-    private var entitiesToAdd: ImmutableArray<Entity>? = null
-    private var entitiesWithPosition: ImmutableArray<Entity>? = null
+    private lateinit var entitiesToAdd: ImmutableArray<Entity>
+    private lateinit var entitiesWithPosition: ImmutableArray<Entity>
+    private lateinit var contactEntities: ImmutableArray<Entity>
 
     private val bodyMapper = ComponentMapper.getFor(BodyComponent::class.java)
     private val positionMapper = ComponentMapper.getFor(PositionComponent::class.java)
+    private val contactMapper = ComponentMapper.getFor(ContactComponent::class.java)
 
     init {
         world.setContactListener(this)
@@ -42,17 +31,20 @@ class WorldSystem : EntitySystem(), ContactListener {
 
         entitiesWithPosition = engine.getEntitiesFor(Family
                 .all(BodyComponent::class.java, PositionComponent::class.java).get())
+
+        contactEntities = engine.getEntitiesFor(Family
+                .all(ContactComponent::class.java).get())
     }
 
     override fun update(deltaTime: Float) {
 
-        for (entity in entitiesToAdd!!) {
+        for (entity in entitiesToAdd) {
             val bodyComponent = bodyMapper.get(entity)
             bodyComponent.initBody(world)
             entity.remove(AddToWorldComponent::class.java)
         }
 
-        for (entity in entitiesWithPosition!!) {
+        for (entity in entitiesWithPosition) {
             val bodyComponent = bodyMapper.get(entity)
             val positionComponent = positionMapper.get(entity)
             val bodyPosition = bodyComponent.body?.position
@@ -61,11 +53,36 @@ class WorldSystem : EntitySystem(), ContactListener {
             }
         }
 
+        for (entity in contactEntities) {
+            val contactComponent = contactMapper.get(entity)
+            for (targetEntity in contactComponent.contacts) {
+                contactComponent.contact?.contact(entity, targetEntity, engine)
+            }
+            contactComponent.contacts.clear()
+        }
+
         world.step(deltaTime, 6, 2)
     }
 
     fun render(combined: Matrix4) {
         renderer.render(world, combined)
+    }
+
+    override fun endContact(contact: Contact?) {
+        System.out.println("End contact: " + contact?.fixtureA?.userData?.javaClass?.name)
+    }
+
+    override fun beginContact(contact: Contact?) {
+        val entityA: Entity = contact?.fixtureA?.userData as Entity
+        val entityB: Entity = contact.fixtureB?.userData as Entity
+        contactMapper.get(entityA)?.contacts?.add(entityB)
+        contactMapper.get(entityB)?.contacts?.add(entityA)
+    }
+
+    override fun preSolve(contact: Contact?, oldManifold: Manifold?) {
+    }
+
+    override fun postSolve(contact: Contact?, impulse: ContactImpulse?) {
     }
 
 }

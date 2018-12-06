@@ -27,6 +27,7 @@ class VelocitySystem : EntitySystem() {
                 if (!velocityComponent.velocity.isZero) {
                     val finalVelocity = velocityComponent.velocity.cpy().scl(deltaTime)
                     body.linearVelocity = finalVelocity
+                    body.setTransform(body.position, finalVelocity.angleRad())
                 } else {
                     body.linearVelocity = Vector2.Zero
                 }
