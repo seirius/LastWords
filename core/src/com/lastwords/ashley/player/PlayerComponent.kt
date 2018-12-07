@@ -1,4 +1,4 @@
-package com.lastwords.ashley.playerinput
+package com.lastwords.ashley.player
 
 import com.badlogic.ashley.core.Component
 

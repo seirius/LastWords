@@ -7,7 +7,7 @@ import com.badlogic.gdx.physics.box2d.CircleShape
 import com.lastwords.ashley.body.BodyComponent
 import com.lastwords.ashley.entities.CastComponent
 import com.lastwords.ashley.entities.EntityStateComponent
-import com.lastwords.ashley.playerinput.PlayerComponent
+import com.lastwords.ashley.player.PlayerComponent
 import com.lastwords.ashley.position.PositionComponent
 import com.lastwords.ashley.stats.PropertiesComponent
 import com.lastwords.ashley.stats.StatsComponent

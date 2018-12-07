@@ -17,10 +17,19 @@ class CastSystem(private var state: State) : EntitySystem() {
 
     private var entities: ImmutableArray<Entity>? = null
 
+    private val keyMap: Array<String> = Array(255) { i -> i.toString() }
+
     private val castMapper = ComponentMapper.getFor(CastComponent::class.java)
     private val entityStateMapper = ComponentMapper.getFor(EntityStateComponent::class.java)
     private val positionMapper = ComponentMapper.getFor(PositionComponent::class.java)
     private val propertiesMapper = ComponentMapper.getFor(PropertiesComponent::class.java)
+
+    init {
+        keyMap[Input.Keys.A] = "A"
+        keyMap[Input.Keys.S] = "S"
+        keyMap[Input.Keys.D] = "D"
+        keyMap[Input.Keys.F] = "F"
+    }
 
     override fun addedToEngine(engine: Engine?) {
         entities = engine!!
@@ -36,18 +45,6 @@ class CastSystem(private var state: State) : EntitySystem() {
             if (entityStateComponent.castState) {
                 val castComponent = castMapper.get(entity)
 
-                if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
-                    castComponent.castPile.add(Input.Keys.Q)
-                }
-                if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
-                    castComponent.castPile.add(Input.Keys.W)
-                }
-                if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-                    castComponent.castPile.add(Input.Keys.E)
-                }
-                if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-                    castComponent.castPile.add(Input.Keys.R)
-                }
                 if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
                     castComponent.castPile.add(Input.Keys.A)
                 }
@@ -64,17 +61,19 @@ class CastSystem(private var state: State) : EntitySystem() {
                 if (Gdx.input.justTouched() && castComponent.castPile.size > 0) {
                     val casted = StringBuilder()
                     for (key in castComponent.castPile) {
-                        casted.append(key).append(":")
+                        casted.append(keyMap[key])
                     }
+                    println(castComponent.castPile)
                     println(casted)
-                    castComponent.castPile.clear()
+                    if (Spells.tryCast(castComponent.castPile).contentEquals(Spells.FIRE_BALL)) {
+                        val positionComponent = positionMapper.get(entity)
+                        val targetPosition = state.getWorldMousePosition()
+                        val originPosition = positionComponent.position.cpy()
 
-                    val positionComponent = positionMapper.get(entity)
+                        engine.addEntity(Projectile(originPosition, targetPosition, 30f, propertiesMapper.get(entity).width / 2))
+                    }
 
-                    val targetPosition = state.getWorldMousePosition()
-                    val originPosition = positionComponent.position.cpy()
-
-                    engine.addEntity(Projectile(originPosition, targetPosition, 30f, propertiesMapper.get(entity).width / 2))
+//                    castComponent.castPile.clear()
                 }
             }
         }

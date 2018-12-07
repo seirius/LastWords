@@ -7,7 +7,7 @@ import com.badlogic.gdx.Input
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.lastwords.ashley.entities.EntityStateComponent
-import com.lastwords.ashley.playerinput.PlayerComponent
+import com.lastwords.ashley.player.PlayerComponent
 import com.lastwords.ashley.stats.StatsComponent
 
 class InputToVelocitySystem : EntitySystem() {
