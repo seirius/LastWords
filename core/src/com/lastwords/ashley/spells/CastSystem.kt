@@ -1,21 +1,18 @@
-package com.lastwords.ashley.entities
+package com.lastwords.ashley.spells
 
 import com.badlogic.ashley.core.*
 import com.badlogic.ashley.utils.ImmutableArray
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
-import com.badlogic.gdx.math.MathUtils
-import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.physics.box2d.World
+import com.lastwords.ashley.entities.EntityStateComponent
 import com.lastwords.ashley.position.PositionComponent
 import com.lastwords.ashley.stats.PropertiesComponent
 import com.lastwords.entities.Projectile
-import com.lastwords.entities.indicators.DamageIndicator
 import com.lastwords.states.State
 
 class CastSystem(private var state: State) : EntitySystem() {
 
-    private var entities: ImmutableArray<Entity>? = null
+    private lateinit var entities: ImmutableArray<Entity>
 
     private val keyMap: Array<String> = Array(255) { i -> i.toString() }
 
@@ -40,7 +37,7 @@ class CastSystem(private var state: State) : EntitySystem() {
 
     override fun update(deltaTime: Float) {
 
-        for (entity in entities!!) {
+        for (entity in entities) {
             val entityStateComponent = entityStateMapper.get(entity)
             if (entityStateComponent.castState) {
                 val castComponent = castMapper.get(entity)
@@ -58,22 +55,24 @@ class CastSystem(private var state: State) : EntitySystem() {
                     castComponent.castPile.add(Input.Keys.F)
                 }
 
-                if (Gdx.input.justTouched() && castComponent.castPile.size > 0) {
-                    val casted = StringBuilder()
-                    for (key in castComponent.castPile) {
-                        casted.append(keyMap[key])
-                    }
-                    println(castComponent.castPile)
-                    println(casted)
-                    if (Spells.tryCast(castComponent.castPile).contentEquals(Spells.FIRE_BALL)) {
-                        val positionComponent = positionMapper.get(entity)
-                        val targetPosition = state.getWorldMousePosition()
-                        val originPosition = positionComponent.position.cpy()
+                if (castComponent.castPile.size > 0) {
+                    if (Gdx.input.justTouched()) {
+                        val casted = StringBuilder()
+                        for (key in castComponent.castPile) {
+                            casted.append(keyMap[key])
+                        }
+                        if (Spells.tryCast(castComponent.castPile).contentEquals(Spells.FIRE_BALL)) {
+                            val positionComponent = positionMapper.get(entity)
+                            val targetPosition = state.getWorldMousePosition()
+                            val originPosition = positionComponent.position.cpy()
 
-                        engine.addEntity(Projectile(originPosition, targetPosition, 30f, propertiesMapper.get(entity).width / 2))
+                            engine.addEntity(Projectile(originPosition, targetPosition, 30f, propertiesMapper.get(entity).width / 2))
+                        } else {
+                            castComponent.castPile.removeAt(0)
+                        }
+                        println(castComponent.castPile)
+                        println(casted)
                     }
-
-//                    castComponent.castPile.clear()
                 }
             }
         }

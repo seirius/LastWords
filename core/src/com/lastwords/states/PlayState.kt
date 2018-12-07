@@ -7,7 +7,7 @@ import com.lastwords.LastWords
 import com.lastwords.ashley.animation.AnimationSystem
 import com.lastwords.ashley.death.DeathSystem
 import com.lastwords.ashley.draw.DrawSystem
-import com.lastwords.ashley.entities.CastSystem
+import com.lastwords.ashley.spells.CastSystem
 import com.lastwords.ashley.deathcondition.DistanceLimitSystem
 import com.lastwords.ashley.deathcondition.TimeLimitSystem
 import com.lastwords.ashley.draw.TextSystem

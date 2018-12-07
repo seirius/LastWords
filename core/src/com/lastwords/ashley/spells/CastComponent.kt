@@ -1,4 +1,4 @@
-package com.lastwords.ashley.entities
+package com.lastwords.ashley.spells
 
 import com.badlogic.ashley.core.Component
 

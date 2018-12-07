@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.CircleShape
 import com.lastwords.ashley.body.BodyComponent
-import com.lastwords.ashley.entities.CastComponent
+import com.lastwords.ashley.spells.CastComponent
 import com.lastwords.ashley.entities.EntityStateComponent
 import com.lastwords.ashley.player.PlayerComponent
 import com.lastwords.ashley.position.PositionComponent
