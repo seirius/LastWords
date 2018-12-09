@@ -17,6 +17,8 @@ class StatsSystem: EntitySystem() {
     private val statsMapper = ComponentMapper.getFor(StatsComponent::class.java)
     private val positionMapper = ComponentMapper.getFor(PositionComponent::class.java)
 
+    private var energyRegCounter = 0f
+
     override fun addedToEngine(engine: Engine?) {
         entities = engine!!.getEntitiesFor(Family.all(StatsComponent::class.java, PositionComponent::class.java).get())
     }
@@ -35,6 +37,18 @@ class StatsSystem: EntitySystem() {
 
             if (statsComponent.healthPoints < 1) {
                 entity.add(DeathComponent())
+            }
+
+            if (statsComponent.energy < statsComponent.maxEnergy) {
+                energyRegCounter += deltaTime
+                if (energyRegCounter >= 1f) {
+                    statsComponent.energy += statsComponent.energyReg
+                    energyRegCounter = 0f
+                }
+            }
+
+            if (statsComponent.energy > statsComponent.maxEnergy) {
+                statsComponent.energy = statsComponent.maxEnergy
             }
 
         }

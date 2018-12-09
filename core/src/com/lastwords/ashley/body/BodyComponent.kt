@@ -4,44 +4,39 @@ import com.badlogic.ashley.core.Component
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.*
+import com.lastwords.states.PlayState
 
 class BodyComponent(
-        private var entity: Entity,
-        private var initPosition: Vector2?,
-        private var bodyType: BodyDef.BodyType?,
-        private var shape: Shape?,
-        private var isSensor: Boolean = false
+        entity: Entity,
+        initPosition: Vector2,
+        bodyType: BodyDef.BodyType,
+        shape: Shape?,
+        isSensor: Boolean = false
 ) : Component {
 
-    var body: Body? = null
-    private lateinit var bodyDef: BodyDef
-    private lateinit var fixture: Fixture
-    private lateinit var world: World
+    var body: Body
+    private var bodyDef: BodyDef = BodyDef()
+    private var fixture: Fixture
 
-    fun initBody(world: World) {
-        this.world = world
-        bodyDef = BodyDef()
+    init {
         bodyDef.type = bodyType
-        bodyType = null
-        bodyDef.position.set(initPosition!!.cpy())
-        initPosition = null
+        bodyDef.position.set(initPosition.cpy())
 
-        body = world.createBody(bodyDef)
+        body = PlayState.world!!.createBody(bodyDef)
 
         val fixtureDef = FixtureDef()
         fixtureDef.shape = shape
         fixtureDef.isSensor = isSensor
         fixtureDef.density = 0.1f
 
-        fixture = body!!.createFixture(fixtureDef)
+        fixture = body.createFixture(fixtureDef)
         fixture.userData = entity
 
         shape!!.dispose()
-        shape = null
     }
 
     fun die() {
-        world.destroyBody(body)
+        PlayState.world?.destroyBody(body)
     }
 }
 

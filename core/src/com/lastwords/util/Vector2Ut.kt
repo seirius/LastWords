@@ -7,7 +7,7 @@ fun Vector2.angleToTarget(target: Vector2): Float {
     return MathUtils.atan2(target.y - this.y, target.x - this.x)
 }
 
-fun angleMagnitudeToVector(angle: Float, magnitude: Float?): Vector2 {
+fun angleMagnitudeToVector(angle: Float, magnitude: Float? = null): Vector2 {
     var vector = Vector2(MathUtils.cos(angle), MathUtils.sin(angle))
     if (magnitude != null) {
         vector = vector.scl(magnitude)

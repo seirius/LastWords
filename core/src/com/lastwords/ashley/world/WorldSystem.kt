@@ -3,17 +3,14 @@ package com.lastwords.ashley.world
 import com.badlogic.ashley.core.*
 import com.badlogic.ashley.utils.ImmutableArray
 import com.badlogic.gdx.math.Matrix4
-import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.*
 import com.lastwords.ashley.body.BodyComponent
 import com.lastwords.ashley.position.PositionComponent
 
-class WorldSystem : EntitySystem(), ContactListener {
+class WorldSystem(private val world: World) : EntitySystem(), ContactListener {
 
-    private val world: World = World(Vector2.Zero, true)
     private val renderer: Box2DDebugRenderer = Box2DDebugRenderer()
 
-    private lateinit var entitiesToAdd: ImmutableArray<Entity>
     private lateinit var entitiesWithPosition: ImmutableArray<Entity>
     private lateinit var contactEntities: ImmutableArray<Entity>
 
@@ -26,10 +23,7 @@ class WorldSystem : EntitySystem(), ContactListener {
     }
 
     override fun addedToEngine(engine: Engine?) {
-        entitiesToAdd = engine!!.getEntitiesFor(Family
-                .all(BodyComponent::class.java, AddToWorldComponent::class.java).get())
-
-        entitiesWithPosition = engine.getEntitiesFor(Family
+        entitiesWithPosition = engine!!.getEntitiesFor(Family
                 .all(BodyComponent::class.java, PositionComponent::class.java).get())
 
         contactEntities = engine.getEntitiesFor(Family
@@ -38,16 +32,10 @@ class WorldSystem : EntitySystem(), ContactListener {
 
     override fun update(deltaTime: Float) {
 
-        for (entity in entitiesToAdd) {
-            val bodyComponent = bodyMapper.get(entity)
-            bodyComponent.initBody(world)
-            entity.remove(AddToWorldComponent::class.java)
-        }
-
         for (entity in entitiesWithPosition) {
             val bodyComponent = bodyMapper.get(entity)
             val positionComponent = positionMapper.get(entity)
-            val bodyPosition = bodyComponent.body?.position
+            val bodyPosition = bodyComponent.body.position
             if (bodyPosition != null && bodyPosition != positionComponent.position) {
                 positionComponent.position = bodyPosition
             }

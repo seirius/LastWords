@@ -16,8 +16,8 @@ class CastComponent : Component {
 
 }
 
-enum class SpellTypes(val value: IntArray) {
-    FIRE_BALL(intArrayOf(45, 34))
+enum class SpellTypes(val value: IntArray, val cost: Int) {
+    FIRE_BALL(intArrayOf(45, 34), 10)
 }
 
 object Spells {

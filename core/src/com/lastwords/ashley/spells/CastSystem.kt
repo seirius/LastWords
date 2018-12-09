@@ -8,6 +8,7 @@ import com.lastwords.ashley.orders.CastOrderComponent
 import com.lastwords.ashley.orders.FireSpellComponent
 import com.lastwords.ashley.position.PositionComponent
 import com.lastwords.ashley.stats.PropertiesComponent
+import com.lastwords.ashley.stats.StatsComponent
 import com.lastwords.entities.spells.Projectile
 
 class CastSystem : EntitySystem() {
@@ -21,11 +22,13 @@ class CastSystem : EntitySystem() {
     private val propertiesMapper = ComponentMapper.getFor(PropertiesComponent::class.java)
     private val fireSpellMapper = ComponentMapper.getFor(FireSpellComponent::class.java)
     private val targetMapper = ComponentMapper.getFor(TargetComponent::class.java)
+    private val statsMapper = ComponentMapper.getFor(StatsComponent::class.java)
 
     override fun addedToEngine(engine: Engine?) {
         fireSpellEntities = engine!!.getEntitiesFor(Family.all(
                 CastComponent::class.java, FireSpellComponent::class.java,
-                EntityStateComponent::class.java, TargetComponent::class.java
+                EntityStateComponent::class.java, TargetComponent::class.java,
+                StatsComponent::class.java
         ).get())
 
         castOrderEntities = engine.getEntitiesFor(Family.all(
@@ -54,8 +57,10 @@ class CastSystem : EntitySystem() {
                 }
             } else {
                 val spell = castComponent.spells[fireSpellComponent.spell]
+                val statsComponent = statsMapper.get(entity)
                 if (spell != null) {
-                    if (spell == SpellTypes.FIRE_BALL) {
+                    if (spell == SpellTypes.FIRE_BALL && statsComponent.energy >= SpellTypes.FIRE_BALL.cost) {
+                        statsComponent.energy -= SpellTypes.FIRE_BALL.cost
                         engine.addEntity(Projectile(
                                 positionMapper.get(entity).position.cpy(),
                                 targetMapper.get(entity).target,

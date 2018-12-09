@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.CircleShape
+import com.lastwords.ashley.ai.SteeringComponent
 import com.lastwords.ashley.body.BodyComponent
 import com.lastwords.ashley.spells.CastComponent
 import com.lastwords.ashley.entities.EntityStateComponent
@@ -21,10 +22,11 @@ class Prometheus(
         val propertiesComponent = PropertiesComponent(15f, 15f)
         val circleShape = CircleShape()
         circleShape.radius = propertiesComponent.width
-        add(BodyComponent(
+        val bodyComponent = BodyComponent(
                 this, Vector2(position.x, position.y),
                 BodyDef.BodyType.DynamicBody, circleShape
-        ))
+        )
+        add(bodyComponent)
         add(CastComponent())
         add(AddToWorldComponent())
         add(PositionComponent(position.x, position.y))
@@ -34,6 +36,7 @@ class Prometheus(
         statsComponent.speed = 5f
         statsComponent.healthPoints = 5000
         add(statsComponent)
+        add(SteeringComponent(bodyComponent))
     }
 
 }

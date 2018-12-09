@@ -27,6 +27,7 @@ class GUISystem(
     private lateinit var hpEntities: ImmutableArray<Entity>
     private lateinit var castEntities: ImmutableArray<Entity>
     private lateinit var spellEntities: ImmutableArray<Entity>
+    private lateinit var energyEntities: ImmutableArray<Entity>
 
     private val textMapper = ComponentMapper.getFor(TextGUIComponent::class.java)
     private val positionMapper = ComponentMapper.getFor(PositionComponent::class.java)
@@ -64,6 +65,10 @@ class GUISystem(
 
         spellEntities = engine.getEntitiesFor(Family.all(
                 SpellSelectedBarComponent::class.java, TextGUIComponent::class.java
+        ).get())
+
+        energyEntities = engine.getEntitiesFor(Family.all(
+                EnergyBarComponent::class.java, TextGUIComponent::class.java
         ).get())
     }
 
@@ -112,6 +117,19 @@ class GUISystem(
                         text.append("[${spell.name}:${castComponent.spells[spell]?.name}]\n")
                     }
                     textGUIMapper.get(entity).text = text.toString()
+                }
+            }
+        }
+
+        for (entity in energyEntities) {
+            if (entity is GUIEntity) {
+                val statsComponent = statsMapper.get(entity.trackEntity)
+                if (statsComponent != null) {
+                    val positionComponent = positionMapper.get(entity)
+                    positionComponent.position.x = State.CURRENT_WIDTH - 80f
+                    positionComponent.position.y = State.CURRENT_HEIGHT - 10f
+
+                    textGUIMapper.get(entity).text = "ENERGY: ${statsComponent.energy}"
                 }
             }
         }

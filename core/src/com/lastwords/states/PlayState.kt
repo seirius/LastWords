@@ -3,7 +3,9 @@ package com.lastwords.states
 import com.badlogic.ashley.core.Engine
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.physics.box2d.World
 import com.lastwords.LastWords
+import com.lastwords.ashley.ai.SteeringSystem
 import com.lastwords.ashley.animation.AnimationSystem
 import com.lastwords.ashley.death.DeathSystem
 import com.lastwords.ashley.deathcondition.DistanceLimitSystem
@@ -22,6 +24,7 @@ import com.lastwords.entities.AshleyEntity
 import com.lastwords.entities.Player
 import com.lastwords.entities.Prometheus
 import com.lastwords.entities.gui.CastBar
+import com.lastwords.entities.gui.EnergyBar
 import com.lastwords.entities.gui.HealthPointsBar
 import com.lastwords.entities.gui.SpellSelectedBar
 
@@ -32,12 +35,14 @@ class PlayState(gameStateManager: GameStateManager): State(gameStateManager) {
     private val worldSystem: WorldSystem
 
     init {
+        world = World(Vector2.Zero, true)
         camera.setToOrtho(false, LastWords.WIDTH / LastWords.SCALE, LastWords.HEIGHT / LastWords.SCALE)
         guiCamera.setToOrtho(false, LastWords.WIDTH / LastWords.SCALE, LastWords.HEIGHT / LastWords.SCALE)
-        worldSystem = WorldSystem()
+        worldSystem = WorldSystem(world!!)
         engine = gameStateManager.engine
         engine.addSystem(worldSystem)
         engine.addSystem(PlayerBehaviourSystem(this))
+        engine.addSystem(SteeringSystem())
         engine.addSystem(CastSystem())
         engine.addSystem(MoveToTargetSystem())
         engine.addSystem(VelocitySystem())
@@ -56,6 +61,7 @@ class PlayState(gameStateManager: GameStateManager): State(gameStateManager) {
         engine.addEntity(HealthPointsBar(ashleyEntity))
         engine.addEntity(CastBar(ashleyEntity))
         engine.addEntity(SpellSelectedBar(ashleyEntity))
+        engine.addEntity(EnergyBar(ashleyEntity))
     }
 
     override fun handleInput() {
@@ -72,5 +78,10 @@ class PlayState(gameStateManager: GameStateManager): State(gameStateManager) {
     }
 
     override fun dispose() {
+        PlayState.world = null
+    }
+
+    companion object {
+        var world: World? = null
     }
 }
