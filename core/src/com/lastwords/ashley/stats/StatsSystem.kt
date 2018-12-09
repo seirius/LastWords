@@ -3,8 +3,12 @@ package com.lastwords.ashley.stats
 import com.badlogic.ashley.core.*
 import com.badlogic.ashley.utils.ImmutableArray
 import com.lastwords.ashley.death.DeathComponent
+import com.lastwords.ashley.draw.TextGUIComponent
 import com.lastwords.ashley.position.PositionComponent
+import com.lastwords.entities.gui.HealthPointsBar
+import com.lastwords.entities.gui.HealthPointsComponent
 import com.lastwords.entities.indicators.DamageIndicator
+import com.lastwords.states.State
 
 class StatsSystem: EntitySystem() {
 
@@ -34,6 +38,7 @@ class StatsSystem: EntitySystem() {
             }
 
         }
+
     }
 
 }

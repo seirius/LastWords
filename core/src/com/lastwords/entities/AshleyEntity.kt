@@ -9,6 +9,7 @@ import com.lastwords.ashley.spells.CastComponent
 import com.lastwords.ashley.entities.EntityStateComponent
 import com.lastwords.ashley.player.PlayerComponent
 import com.lastwords.ashley.position.PositionComponent
+import com.lastwords.ashley.spells.TargetComponent
 import com.lastwords.ashley.stats.PropertiesComponent
 import com.lastwords.ashley.stats.StatsComponent
 import com.lastwords.ashley.velocity.VelocityComponent
@@ -35,6 +36,7 @@ class AshleyEntity(xPosition: Float, yPosition: Float, speed: Float) : Entity() 
         statsComponent.healthPoints = 5
         add(statsComponent)
         add(PlayerComponent())
+        add(TargetComponent())
     }
 
 }

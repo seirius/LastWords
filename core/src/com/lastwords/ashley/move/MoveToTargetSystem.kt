@@ -4,8 +4,8 @@ import com.badlogic.ashley.core.*
 import com.badlogic.ashley.utils.ImmutableArray
 import com.lastwords.ashley.position.PositionComponent
 import com.lastwords.ashley.stats.StatsComponent
-import com.lastwords.ashley.velocity.InputToVelocitySystem
 import com.lastwords.ashley.velocity.VelocityComponent
+import com.lastwords.ashley.velocity.VelocitySystem
 import com.lastwords.util.angleMagnitudeToVector
 import com.lastwords.util.angleToTarget
 
@@ -36,7 +36,7 @@ class MoveToTargetSystem: EntitySystem() {
             val statsComponent = statsMapper.get(entity)
 
             val angle = positionComponent.position.angleToTarget(toTargetComponent.targetPosition)
-            val finalSpeed = statsComponent.speed * InputToVelocitySystem.SPEED_MULTIPLIER
+            val finalSpeed = statsComponent.speed * VelocitySystem.SPEED_MULTIPLIER
 
             velocityComponent.velocity = angleMagnitudeToVector(angle, finalSpeed)
             entity.remove(ToTargetComponent::class.java)

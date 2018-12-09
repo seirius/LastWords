@@ -68,9 +68,7 @@ class WorldSystem : EntitySystem(), ContactListener {
         renderer.render(world, combined)
     }
 
-    override fun endContact(contact: Contact?) {
-        System.out.println("End contact: " + contact?.fixtureA?.userData?.javaClass?.name)
-    }
+    override fun endContact(contact: Contact?) {}
 
     override fun beginContact(contact: Contact?) {
         val entityA: Entity = contact?.fixtureA?.userData as Entity
@@ -79,10 +77,8 @@ class WorldSystem : EntitySystem(), ContactListener {
         contactMapper.get(entityB)?.contacts?.add(entityA)
     }
 
-    override fun preSolve(contact: Contact?, oldManifold: Manifold?) {
-    }
+    override fun preSolve(contact: Contact?, oldManifold: Manifold?) {}
 
-    override fun postSolve(contact: Contact?, impulse: ContactImpulse?) {
-    }
+    override fun postSolve(contact: Contact?, impulse: ContactImpulse?) {}
 
 }

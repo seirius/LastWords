@@ -1,14 +1,12 @@
-package com.lastwords.entities
+package com.lastwords.entities.spells
 
-import com.badlogic.ashley.core.ComponentMapper
-import com.badlogic.ashley.core.Engine
-import com.badlogic.ashley.core.Entity
+import com.badlogic.ashley.core.*
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.CircleShape
 import com.lastwords.ashley.body.BodyComponent
 import com.lastwords.ashley.death.DeathComponent
-import com.lastwords.ashley.deathcondition.DistanceLimitComponent
+import com.lastwords.ashley.deathcondition.TimeLimitComponent
 import com.lastwords.ashley.move.ToTargetComponent
 import com.lastwords.ashley.position.PositionComponent
 import com.lastwords.ashley.stats.Damage
@@ -46,20 +44,29 @@ class Projectile(
         add(PositionComponent(initPosition.x, initPosition.y))
         add(ToTargetComponent(targetPosition))
         add(VelocityComponent())
-        add(DistanceLimitComponent(200f, initPosition))
-        add(ContactComponent(ProjectileComponent))
+        add(TimeLimitComponent(2f))
+        add(ContactComponent(ProjectileContact))
     }
 
 }
 
-object ProjectileComponent: ContactImpl {
+object ProjectileContact: ContactImpl {
     private val statsMapper = ComponentMapper.getFor(StatsComponent::class.java)
+    private val velocityMapper = ComponentMapper.getFor(VelocityComponent::class.java)
 
     override fun contact(thisEntity: Entity, entity: Entity, engine: Engine) {
         val thisEntityStats = statsMapper.get(thisEntity)
         val entityStats = statsMapper.get(entity)
-        entityStats.damageReceived.add(Damage(thisEntityStats.attack))
+        if (entity is Projectile) {
+            velocityMapper.get(thisEntity).velocity.scl(2f)
+            velocityMapper.get(entity).velocity.scl(2f)
+            thisEntityStats.attack += entityStats.attack
+            entityStats.attack += thisEntityStats.attack
+        } else {
+            entityStats.damageReceived.add(Damage(thisEntityStats.attack))
 
-        thisEntity.add(DeathComponent())
+            thisEntity.add(DeathComponent())
+        }
+
     }
 }

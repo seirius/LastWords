@@ -4,26 +4,38 @@ import com.badlogic.ashley.core.Component
 
 import java.util.ArrayList
 
+enum class Spell {
+    S1, S2
+}
+
 class CastComponent : Component {
 
     var castPile: MutableList<Int> = ArrayList()
 
+    val spells: HashMap<Spell, SpellTypes> = hashMapOf()
+
+}
+
+enum class SpellTypes(val value: IntArray) {
+    FIRE_BALL(intArrayOf(45, 34))
 }
 
 object Spells {
-    val FIRE_BALL = intArrayOf(34, 34)
-
-    fun tryCast(pile: MutableList<Int>): IntArray {
+    fun tryCast(pile: MutableList<Int>, cleanAfter: Boolean = true): SpellTypes? {
         for (key in (0 until pile.size)) {
             val preSpell: IntArray = pile.slice(0..key).toIntArray()
-            if (preSpell.contentEquals(FIRE_BALL)) {
-                for (index in (0..key)) {
-                    pile.removeAt(0)
+            if (preSpell.contentEquals(SpellTypes.FIRE_BALL.value)) {
+                if (cleanAfter) {
+                    pile.clear()
                 }
-                return FIRE_BALL
+                return SpellTypes.FIRE_BALL
             }
         }
 
-        return intArrayOf()
+        if (cleanAfter) {
+            pile.clear()
+        }
+
+        return null
     }
 }

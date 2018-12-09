@@ -6,4 +6,8 @@ class EntityStateComponent : Component {
 
     var castState: Boolean = false
 
+    fun toggleCastState() {
+        castState = !castState
+    }
+
 }

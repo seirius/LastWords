@@ -4,7 +4,7 @@ import com.badlogic.ashley.core.*
 import com.badlogic.ashley.utils.ImmutableArray
 import com.lastwords.ashley.death.DeathComponent
 
-class TimeLimitComponent(var time: Float): Component {
+class TimeLimitComponent(private var time: Float): Component {
 
     private var totalTime = 0f
 
