@@ -5,6 +5,8 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.CircleShape
 import com.lastwords.ashley.body.BodyComponent
+import com.lastwords.ashley.body.FixtureComponent
+import com.lastwords.ashley.body.FixtureType
 import com.lastwords.ashley.death.DeathComponent
 import com.lastwords.ashley.deathcondition.TimeLimitComponent
 import com.lastwords.ashley.move.ToTargetComponent
@@ -39,7 +41,9 @@ class Projectile(
         add(propertiesComponent)
         val circleShape = CircleShape()
         circleShape.radius = propertiesComponent.width
-        add(BodyComponent(this, initPosition, BodyDef.BodyType.DynamicBody, circleShape, true))
+        val bodyComponent = BodyComponent(initPosition, BodyDef.BodyType.DynamicBody)
+        add(bodyComponent)
+        add(FixtureComponent(this, bodyComponent.body, circleShape, FixtureType.SENSOR, ProjectileContact))
         add(AddToWorldComponent())
         add(PositionComponent(initPosition.x, initPosition.y))
         add(ToTargetComponent(targetPosition))
