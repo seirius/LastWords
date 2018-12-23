@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.CircleShape
 import com.lastwords.ashley.body.BodyComponent
+import com.lastwords.ashley.body.ContactSensor
 import com.lastwords.ashley.body.FixtureComponent
 import com.lastwords.ashley.body.FixtureType
 import com.lastwords.ashley.spells.CastComponent
@@ -26,7 +27,9 @@ class AshleyEntity(xPosition: Float, yPosition: Float, speed: Float) : Entity() 
         circleShape.radius = propertiesComponent.width
         val bodyComponent = BodyComponent(Vector2(xPosition, yPosition), BodyDef.BodyType.DynamicBody)
         add(bodyComponent)
-        add(FixtureComponent(this, bodyComponent.body, circleShape, FixtureType.MAIN))
+        add(FixtureComponent(bodyComponent.body, mutableListOf(
+                ContactSensor(this, circleShape, FixtureType.MAIN)
+        )))
         add(CastComponent())
         add(AddToWorldComponent())
         add(PositionComponent(xPosition, yPosition))

@@ -30,7 +30,7 @@ class SteeringComponent(private var bodyComponent: BodyComponent): Component, St
 
     private fun applySteering(steering: SteeringAcceleration<Vector2>, deltaTime: Float) {
         if (!STEERING_OUTPUT.linear.isZero) {
-            bodyComponent.body?.applyForceToCenter(STEERING_OUTPUT.linear, true)
+            bodyComponent.body.applyForceToCenter(STEERING_OUTPUT.linear, true)
         }
     }
 
@@ -63,7 +63,7 @@ class SteeringComponent(private var bodyComponent: BodyComponent): Component, St
     }
 
     override fun getPosition(): Vector2? {
-        return bodyComponent.body?.position
+        return bodyComponent.body.position
     }
 
     override fun isTagged(): Boolean {

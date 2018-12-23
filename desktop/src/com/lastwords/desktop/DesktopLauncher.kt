@@ -11,6 +11,8 @@ object DesktopLauncher {
         config.title = LastWords.TITLE
         config.width = LastWords.WIDTH
         config.height = LastWords.HEIGHT
+        config.x = 1400
+        config.y = 1500
         LwjglApplication(LastWords(), config)
     }
 }

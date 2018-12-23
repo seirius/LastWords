@@ -5,6 +5,7 @@ import com.badlogic.ashley.utils.ImmutableArray
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.physics.box2d.*
 import com.lastwords.ashley.body.BodyComponent
+import com.lastwords.ashley.body.ContactSensor
 import com.lastwords.ashley.position.PositionComponent
 
 class WorldSystem(private val world: World) : EntitySystem(), ContactListener {
@@ -43,8 +44,8 @@ class WorldSystem(private val world: World) : EntitySystem(), ContactListener {
 
         for (entity in contactEntities) {
             val contactComponent = contactMapper.get(entity)
-            for (targetEntity in contactComponent.contacts) {
-                contactComponent.contact?.contact(entity, targetEntity, engine)
+            for (contactSensor in contactComponent.contacts) {
+                contactComponent.contact?.contact(entity, contactSensor, engine)
             }
             contactComponent.contacts.clear()
         }
@@ -59,10 +60,11 @@ class WorldSystem(private val world: World) : EntitySystem(), ContactListener {
     override fun endContact(contact: Contact?) {}
 
     override fun beginContact(contact: Contact?) {
-        val entityA: Entity = contact?.fixtureA?.userData as Entity
-        val entityB: Entity = contact.fixtureB?.userData as Entity
-        contactMapper.get(entityA)?.contacts?.add(entityB)
-        contactMapper.get(entityB)?.contacts?.add(entityA)
+        val contactSensorA: ContactSensor = contact?.fixtureA?.userData as ContactSensor
+        val contactSensorB: ContactSensor = contact.fixtureB?.userData as ContactSensor
+
+        contactMapper.get(contactSensorA.entity)?.contacts?.add(contactSensorB)
+        contactMapper.get(contactSensorB.entity)?.contacts?.add(contactSensorA)
     }
 
     override fun preSolve(contact: Contact?, oldManifold: Manifold?) {}

@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.CircleShape
 import com.lastwords.ashley.ai.SteeringComponent
 import com.lastwords.ashley.body.BodyComponent
+import com.lastwords.ashley.body.ContactSensor
 import com.lastwords.ashley.body.FixtureComponent
 import com.lastwords.ashley.body.FixtureType
 import com.lastwords.ashley.spells.CastComponent
@@ -28,10 +29,12 @@ class Prometheus(
         circleShape.radius = propertiesComponent.width
         val bodyComponent = BodyComponent(Vector2(position.x, position.y), BodyDef.BodyType.DynamicBody)
         add(bodyComponent)
-        add(FixtureComponent(this, bodyComponent.body, circleShape, FixtureType.MAIN))
         val circleShapeSensor = CircleShape()
         circleShapeSensor.radius = 60f
-        add(FixtureComponent(this, bodyComponent.body, circleShapeSensor, FixtureType.SENSOR, PrometheusSensor))
+        add(FixtureComponent(bodyComponent.body, mutableListOf(
+                ContactSensor(this, circleShape, FixtureType.MAIN),
+                ContactSensor(this, circleShapeSensor, FixtureType.SENSOR, PrometheusSensor, false)
+        )))
         add(CastComponent())
         add(AddToWorldComponent())
         add(PositionComponent(position.x, position.y))
@@ -47,7 +50,7 @@ class Prometheus(
 }
 
 object PrometheusSensor: ContactImpl {
-    override fun contact(thisEntity: Entity, entity: Entity, engine: Engine) {
+    override fun contact(thisEntity: Entity, contactSensor: ContactSensor, engine: Engine) {
         println("Contact with prometheus's sensor")
     }
 }

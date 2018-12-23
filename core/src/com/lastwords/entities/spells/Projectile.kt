@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.CircleShape
 import com.lastwords.ashley.body.BodyComponent
+import com.lastwords.ashley.body.ContactSensor
 import com.lastwords.ashley.body.FixtureComponent
 import com.lastwords.ashley.body.FixtureType
 import com.lastwords.ashley.death.DeathComponent
@@ -43,7 +44,9 @@ class Projectile(
         circleShape.radius = propertiesComponent.width
         val bodyComponent = BodyComponent(initPosition, BodyDef.BodyType.DynamicBody)
         add(bodyComponent)
-        add(FixtureComponent(this, bodyComponent.body, circleShape, FixtureType.SENSOR, ProjectileContact))
+        add(FixtureComponent(bodyComponent.body, mutableListOf(
+                ContactSensor(this, circleShape, FixtureType.SENSOR, ProjectileContact)
+        )))
         add(AddToWorldComponent())
         add(PositionComponent(initPosition.x, initPosition.y))
         add(ToTargetComponent(targetPosition))
@@ -58,18 +61,19 @@ object ProjectileContact: ContactImpl {
     private val statsMapper = ComponentMapper.getFor(StatsComponent::class.java)
     private val velocityMapper = ComponentMapper.getFor(VelocityComponent::class.java)
 
-    override fun contact(thisEntity: Entity, entity: Entity, engine: Engine) {
-        val thisEntityStats = statsMapper.get(thisEntity)
-        val entityStats = statsMapper.get(entity)
-        if (entity is Projectile) {
-            velocityMapper.get(thisEntity).velocity.scl(2f)
-            velocityMapper.get(entity).velocity.scl(2f)
-            thisEntityStats.attack += entityStats.attack
-            entityStats.attack += thisEntityStats.attack
-        } else {
-            entityStats.damageReceived.add(Damage(thisEntityStats.attack))
-
-            thisEntity.add(DeathComponent())
+    override fun contact(thisEntity: Entity, contactSensor: ContactSensor, engine: Engine) {
+        if (contactSensor.linkedState) {
+            val thisEntityStats = statsMapper.get(thisEntity)
+            val entityStats = statsMapper.get(contactSensor.entity)
+            if (contactSensor.entity is Projectile) {
+                velocityMapper.get(thisEntity).velocity.scl(2f)
+                velocityMapper.get(contactSensor.entity).velocity.scl(2f)
+                thisEntityStats.attack += entityStats.attack
+                entityStats.attack += thisEntityStats.attack
+            } else {
+                entityStats.damageReceived.add(Damage(thisEntityStats.attack))
+                thisEntity.add(DeathComponent())
+            }
         }
 
     }

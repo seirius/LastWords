@@ -34,25 +34,36 @@ enum class FixtureType {
     MAIN, SENSOR
 }
 
+class ContactSensor(
+        var entity: Entity,
+        var shape: Shape,
+        var fixtureType: FixtureType,
+        var contact: ContactImpl? = null,
+        var linkedState: Boolean = true
+) {
+
+    var fixture: Fixture? = null
+
+}
+
 class FixtureComponent(
-        entity: Entity,
         body: Body,
-        shape: Shape,
-        fixtureType: FixtureType,
-        override var contact: ContactImpl? = null
+        contactSensors: List<ContactSensor>
 ): ContactComponent() {
 
-    private var fixture: Fixture
-
     init {
-        val fixtureDef = FixtureDef()
-        fixtureDef.shape = shape
-        fixtureDef.isSensor = fixtureType == FixtureType.SENSOR
 
-        fixture = body.createFixture(fixtureDef)
-        fixture.userData = entity
+        contactSensors.forEach {
+            val fixtureDef = FixtureDef()
+            fixtureDef.shape = it.shape
+            fixtureDef.isSensor = it.fixtureType == FixtureType.SENSOR
 
-        shape.dispose()
+            it.fixture = body.createFixture(fixtureDef)
+            it.fixture?.userData = it
+
+            it.shape.dispose()
+        }
+
     }
 
 }
