@@ -4,35 +4,24 @@ import com.badlogic.ashley.core.Component
 import com.badlogic.gdx.ai.steer.Steerable
 import com.badlogic.gdx.ai.steer.SteeringAcceleration
 import com.badlogic.gdx.ai.steer.SteeringBehavior
-import com.badlogic.gdx.ai.steer.behaviors.Seek
 import com.badlogic.gdx.ai.utils.Location
 import com.badlogic.gdx.math.Vector2
-import com.lastwords.ashley.body.BodyComponent
+import com.badlogic.gdx.physics.box2d.Body
 import com.lastwords.util.angleMagnitudeToVector
 
-class SteeringComponent(private var bodyComponent: BodyComponent): Component, Steerable<Vector2> {
+class SteeringComponent(private var body: Body): Component, Steerable<Vector2> {
 
     private var _maxAngularSpeed: Float = 10f
-    private var _maxLinearSpeed: Float = 10f
-    private var _angularVelocity: Float = 10f
+    private var _maxLinearSpeed: Float = 1f
+    private var _angularVelocity: Float = 1f
     private var _maxAngularAcceleration: Float = 10f
-    private var _linearVelocity: Vector2 = Vector2(10f, 10f)
-    private var _maxLinearAcceleration: Float = 10f
+    private var _linearVelocity: Vector2 = Vector2(1f, 1f)
+    private var _maxLinearAcceleration: Float = 1f
     private var tagged: Boolean = false
-    private var boundingRadius: Float = 10f
+    private var boundingRadius: Float = 1f
 
+    var steeringAcceleration: SteeringAcceleration<Vector2> = SteeringAcceleration(Vector2())
     var steeringBehavior: SteeringBehavior<Vector2>? = null
-
-    fun update(deltaTime: Float) {
-        steeringBehavior?.calculateSteering(STEERING_OUTPUT)
-        applySteering(STEERING_OUTPUT, deltaTime)
-    }
-
-    private fun applySteering(steering: SteeringAcceleration<Vector2>, deltaTime: Float) {
-        if (!STEERING_OUTPUT.linear.isZero) {
-            bodyComponent.body.applyForceToCenter(STEERING_OUTPUT.linear, true)
-        }
-    }
 
     override fun getMaxAngularSpeed(): Float {
         return _maxAngularSpeed
@@ -63,7 +52,7 @@ class SteeringComponent(private var bodyComponent: BodyComponent): Component, St
     }
 
     override fun getPosition(): Vector2? {
-        return bodyComponent.body.position
+        return body.position
     }
 
     override fun isTagged(): Boolean {
@@ -114,10 +103,6 @@ class SteeringComponent(private var bodyComponent: BodyComponent): Component, St
 
     override fun setTagged(tagged: Boolean) {
         this.tagged = tagged
-    }
-
-    companion object {
-        val STEERING_OUTPUT: SteeringAcceleration<Vector2> = SteeringAcceleration(Vector2())
     }
 
 }

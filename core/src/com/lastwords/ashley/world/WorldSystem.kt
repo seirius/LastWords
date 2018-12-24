@@ -5,8 +5,10 @@ import com.badlogic.ashley.utils.ImmutableArray
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.physics.box2d.*
 import com.lastwords.ashley.body.BodyComponent
+import com.lastwords.ashley.body.ContactRes
 import com.lastwords.ashley.body.ContactSensor
 import com.lastwords.ashley.position.PositionComponent
+import com.lastwords.entities.PrometheusSensor
 
 class WorldSystem(private val world: World) : EntitySystem(), ContactListener {
 
@@ -44,10 +46,16 @@ class WorldSystem(private val world: World) : EntitySystem(), ContactListener {
 
         for (entity in contactEntities) {
             val contactComponent = contactMapper.get(entity)
-            for (contactSensor in contactComponent.contacts) {
-                contactComponent.contact?.contact(entity, contactSensor, engine)
+            for (contactRes in contactComponent.contacts) {
+                contactRes.thisContactSensor.contact
+                        ?.contact(entity, contactRes.contactSensor, engine)
+            }
+            for (contactRes in contactComponent.endContacts) {
+                contactRes.thisContactSensor.contact
+                        ?.endContact(entity, contactRes.contactSensor, engine)
             }
             contactComponent.contacts.clear()
+            contactComponent.endContacts.clear()
         }
 
         world.step(deltaTime, 6, 2)
@@ -57,14 +65,20 @@ class WorldSystem(private val world: World) : EntitySystem(), ContactListener {
         renderer.render(world, combined)
     }
 
-    override fun endContact(contact: Contact?) {}
+    override fun endContact(contact: Contact?) {
+        val contactSensorA: ContactSensor = contact?.fixtureA?.userData as ContactSensor
+        val contactSensorB: ContactSensor = contact.fixtureB?.userData as ContactSensor
+
+        contactMapper.get(contactSensorA.entity)?.endContacts?.add(ContactRes(contactSensorA, contactSensorB))
+        contactMapper.get(contactSensorB.entity)?.endContacts?.add(ContactRes(contactSensorB, contactSensorA))
+    }
 
     override fun beginContact(contact: Contact?) {
         val contactSensorA: ContactSensor = contact?.fixtureA?.userData as ContactSensor
         val contactSensorB: ContactSensor = contact.fixtureB?.userData as ContactSensor
 
-        contactMapper.get(contactSensorA.entity)?.contacts?.add(contactSensorB)
-        contactMapper.get(contactSensorB.entity)?.contacts?.add(contactSensorA)
+        contactMapper.get(contactSensorA.entity)?.contacts?.add(ContactRes(contactSensorA, contactSensorB))
+        contactMapper.get(contactSensorB.entity)?.contacts?.add(ContactRes(contactSensorB, contactSensorA))
     }
 
     override fun preSolve(contact: Contact?, oldManifold: Manifold?) {}

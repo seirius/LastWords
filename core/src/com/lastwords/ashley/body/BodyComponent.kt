@@ -46,6 +46,11 @@ class ContactSensor(
 
 }
 
+class ContactRes(
+        var thisContactSensor: ContactSensor,
+        var contactSensor: ContactSensor
+)
+
 class FixtureComponent(
         body: Body,
         contactSensors: List<ContactSensor>

@@ -1,7 +1,10 @@
 package com.lastwords.entities
 
+import com.badlogic.ashley.core.ComponentMapper
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
+import com.badlogic.gdx.ai.steer.behaviors.Flee
+import com.badlogic.gdx.ai.steer.behaviors.Seek
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.CircleShape
@@ -17,6 +20,7 @@ import com.lastwords.ashley.stats.PropertiesComponent
 import com.lastwords.ashley.stats.StatsComponent
 import com.lastwords.ashley.velocity.VelocityComponent
 import com.lastwords.ashley.world.AddToWorldComponent
+import com.lastwords.ashley.world.ContactComponent
 import com.lastwords.ashley.world.ContactImpl
 
 class Prometheus(
@@ -27,13 +31,15 @@ class Prometheus(
         val propertiesComponent = PropertiesComponent(15f, 15f)
         val circleShape = CircleShape()
         circleShape.radius = propertiesComponent.width
-        val bodyComponent = BodyComponent(Vector2(position.x, position.y), BodyDef.BodyType.DynamicBody)
+        val bodyComponent = BodyComponent(Vector2(position.x, position.y),
+                BodyDef.BodyType.DynamicBody)
         add(bodyComponent)
         val circleShapeSensor = CircleShape()
-        circleShapeSensor.radius = 60f
+        circleShapeSensor.radius = 120f
         add(FixtureComponent(bodyComponent.body, mutableListOf(
                 ContactSensor(this, circleShape, FixtureType.MAIN),
-                ContactSensor(this, circleShapeSensor, FixtureType.SENSOR, PrometheusSensor, false)
+                ContactSensor(this, circleShapeSensor, FixtureType.SENSOR,
+                        PrometheusSensor, false)
         )))
         add(CastComponent())
         add(AddToWorldComponent())
@@ -44,13 +50,32 @@ class Prometheus(
         statsComponent.speed = 5f
         statsComponent.healthPoints = 5000
         add(statsComponent)
-        add(SteeringComponent(bodyComponent))
+        val steeringComponent = SteeringComponent(bodyComponent.body)
+        add(steeringComponent)
+        add(ContactComponent())
     }
 
 }
 
 object PrometheusSensor: ContactImpl {
+
+    private val steeringMapper = ComponentMapper.getFor(SteeringComponent::class.java)
+    private val velocityMapper = ComponentMapper.getFor(VelocityComponent::class.java)
+
     override fun contact(thisEntity: Entity, contactSensor: ContactSensor, engine: Engine) {
-        println("Contact with prometheus's sensor")
+        val steeringComponent = steeringMapper.get(contactSensor.entity)
+        if (steeringComponent != null) {
+            val thisSteeringComponent = steeringMapper.get(thisEntity)
+            thisSteeringComponent.steeringBehavior =
+                    Flee<Vector2>(thisSteeringComponent, steeringComponent)
+        }
+    }
+
+    override fun endContact(thisEntity: Entity, contactSensor: ContactSensor, engine: Engine) {
+        println("End contact prometheus")
+        val thisSteeringComponent = steeringMapper.get(thisEntity)
+        thisSteeringComponent?.steeringBehavior = null
+        thisSteeringComponent.steeringAcceleration.linear = Vector2()
+        velocityMapper.get(thisEntity)?.velocity = Vector2()
     }
 }

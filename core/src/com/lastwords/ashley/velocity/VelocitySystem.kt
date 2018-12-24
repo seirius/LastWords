@@ -7,6 +7,7 @@ import com.lastwords.ashley.body.BodyComponent
 import com.lastwords.ashley.body.NoBodyComponent
 import com.lastwords.ashley.position.PositionComponent
 import com.lastwords.ashley.stats.StatsComponent
+import com.lastwords.entities.Prometheus
 
 class VelocitySystem : EntitySystem() {
 
