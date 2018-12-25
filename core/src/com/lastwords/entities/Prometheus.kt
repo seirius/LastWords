@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.ai.steer.behaviors.Flee
 import com.badlogic.gdx.ai.steer.behaviors.Seek
+import com.badlogic.gdx.ai.steer.behaviors.Wander
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.CircleShape
@@ -29,6 +30,7 @@ class Prometheus(
 
     init {
         val propertiesComponent = PropertiesComponent(15f, 15f)
+        add(propertiesComponent)
         val circleShape = CircleShape()
         circleShape.radius = propertiesComponent.width
         val bodyComponent = BodyComponent(Vector2(position.x, position.y),
@@ -42,7 +44,6 @@ class Prometheus(
                         PrometheusSensor, false)
         )))
         add(CastComponent())
-        add(AddToWorldComponent())
         add(PositionComponent(position.x, position.y))
         add(VelocityComponent())
         add(EntityStateComponent())
@@ -67,7 +68,7 @@ object PrometheusSensor: ContactImpl {
         if (steeringComponent != null) {
             val thisSteeringComponent = steeringMapper.get(thisEntity)
             thisSteeringComponent.steeringBehavior =
-                    Flee<Vector2>(thisSteeringComponent, steeringComponent)
+                    Wander<Vector2>(thisSteeringComponent)
         }
     }
 
