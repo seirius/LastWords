@@ -7,16 +7,17 @@ import com.badlogic.gdx.ai.steer.SteeringBehavior
 import com.badlogic.gdx.ai.utils.Location
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Body
+import com.lastwords.ashley.velocity.VelocitySystem
 import com.lastwords.util.angleMagnitudeToVector
 
 class SteeringComponent(private var body: Body): Component, Steerable<Vector2> {
 
     private var _maxAngularSpeed: Float = 10f
-    private var _maxLinearSpeed: Float = 1f
+    private var _maxLinearSpeed: Float = 1f * VelocitySystem.SPEED_MULTIPLIER
     private var _angularVelocity: Float = 1f
     private var _maxAngularAcceleration: Float = 10f
     private var _linearVelocity: Vector2 = Vector2(1f, 1f)
-    private var _maxLinearAcceleration: Float = 1f
+    private var _maxLinearAcceleration: Float = 1f * VelocitySystem.SPEED_MULTIPLIER
     private var tagged: Boolean = false
     private var boundingRadius: Float = 1f
 

@@ -42,7 +42,6 @@ class PlayState(gameStateManager: GameStateManager): State(gameStateManager) {
         engine = gameStateManager.engine
         engine.addSystem(worldSystem)
         engine.addSystem(PlayerBehaviourSystem(this))
-        engine.addSystem(SteeringSystem())
         engine.addSystem(SpawnerSystem())
         engine.addSystem(CastSystem())
         engine.addSystem(MoveToTargetSystem())

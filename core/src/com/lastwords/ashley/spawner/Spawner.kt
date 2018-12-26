@@ -39,6 +39,7 @@ class SpawnerSystem: EntitySystem() {
                 for (i in (0..spawnerComponent.number)) {
                     val spawnableInstance = spawnerComponent.clazz.newInstance() as SpawnableClass
                     spawnableInstance.setPosition(positionComponent.position.cpy())
+                    engine.addEntity(spawnableInstance as Entity)
                 }
             }
         }

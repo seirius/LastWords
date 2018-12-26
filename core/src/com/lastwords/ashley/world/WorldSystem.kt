@@ -69,16 +69,20 @@ class WorldSystem(private val world: World) : EntitySystem(), ContactListener {
         val contactSensorA: ContactSensor = contact?.fixtureA?.userData as ContactSensor
         val contactSensorB: ContactSensor = contact.fixtureB?.userData as ContactSensor
 
-        contactMapper.get(contactSensorA.entity)?.endContacts?.add(ContactRes(contactSensorA, contactSensorB))
-        contactMapper.get(contactSensorB.entity)?.endContacts?.add(ContactRes(contactSensorB, contactSensorA))
+        contactMapper.get(contactSensorA.entity)?.endContacts
+                ?.add(ContactRes(contactSensorA, contactSensorB))
+        contactMapper.get(contactSensorB.entity)?.endContacts
+                ?.add(ContactRes(contactSensorB, contactSensorA))
     }
 
     override fun beginContact(contact: Contact?) {
         val contactSensorA: ContactSensor = contact?.fixtureA?.userData as ContactSensor
         val contactSensorB: ContactSensor = contact.fixtureB?.userData as ContactSensor
 
-        contactMapper.get(contactSensorA.entity)?.contacts?.add(ContactRes(contactSensorA, contactSensorB))
-        contactMapper.get(contactSensorB.entity)?.contacts?.add(ContactRes(contactSensorB, contactSensorA))
+        contactMapper.get(contactSensorA.entity)?.contacts
+                ?.add(ContactRes(contactSensorA, contactSensorB))
+        contactMapper.get(contactSensorB.entity)?.contacts
+                ?.add(ContactRes(contactSensorB, contactSensorA))
     }
 
     override fun preSolve(contact: Contact?, oldManifold: Manifold?) {}

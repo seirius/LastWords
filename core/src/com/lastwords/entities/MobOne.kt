@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.ai.steer.behaviors.Seek
 import com.badlogic.gdx.ai.steer.behaviors.Wander
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.CircleShape
@@ -52,7 +53,6 @@ class MobOne: Entity(), SpawnableClass {
         ))
 
         val steeringComponent = SteeringComponent(bodyComponent.body)
-        steeringComponent.steeringBehavior = Wander<Vector2>(steeringComponent)
         add(steeringComponent)
         add(ContactComponent())
     }
