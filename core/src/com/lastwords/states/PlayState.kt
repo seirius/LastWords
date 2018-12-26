@@ -5,8 +5,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
 import com.lastwords.LastWords
-import com.lastwords.ashley.ai.SteeringComponent
-import com.lastwords.ashley.ai.SteeringSystem
 import com.lastwords.ashley.animation.AnimationSystem
 import com.lastwords.ashley.death.DeathSystem
 import com.lastwords.ashley.deathcondition.DistanceLimitSystem
@@ -22,7 +20,10 @@ import com.lastwords.ashley.stats.StatsSystem
 import com.lastwords.ashley.velocity.VelocitySystem
 import com.lastwords.ashley.world.CameraSystem
 import com.lastwords.ashley.world.WorldSystem
-import com.lastwords.entities.*
+import com.lastwords.entities.AshleyEntity
+import com.lastwords.entities.MobOne
+import com.lastwords.entities.Prometheus
+import com.lastwords.entities.Spawner
 import com.lastwords.entities.gui.CastBar
 import com.lastwords.entities.gui.EnergyBar
 import com.lastwords.entities.gui.HealthPointsBar
@@ -42,7 +43,6 @@ class PlayState(gameStateManager: GameStateManager): State(gameStateManager) {
         engine = gameStateManager.engine
         engine.addSystem(worldSystem)
         engine.addSystem(PlayerBehaviourSystem(this))
-        engine.addSystem(SteeringSystem())
         engine.addSystem(SpawnerSystem())
         engine.addSystem(CastSystem())
         engine.addSystem(MoveToTargetSystem())

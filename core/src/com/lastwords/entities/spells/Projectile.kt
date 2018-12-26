@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.*
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.CircleShape
-import com.lastwords.ashley.ai.SteeringComponent
 import com.lastwords.ashley.body.BodyComponent
 import com.lastwords.ashley.body.ContactSensor
 import com.lastwords.ashley.body.FixtureComponent
@@ -54,7 +53,6 @@ class Projectile(
         add(VelocityComponent())
         add(TimeLimitComponent(2f))
         add(ContactComponent())
-        add(SteeringComponent(bodyComponent.body))
     }
 
 }
