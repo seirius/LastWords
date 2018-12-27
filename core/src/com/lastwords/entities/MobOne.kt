@@ -12,6 +12,8 @@ import com.lastwords.ashley.body.FixtureComponent
 import com.lastwords.ashley.body.FixtureType
 import com.lastwords.ashley.death.DeathComponent
 import com.lastwords.ashley.entities.EntityStateComponent
+import com.lastwords.ashley.move.ToTargetComponent
+import com.lastwords.ashley.move.TrackTargetComponent
 import com.lastwords.ashley.position.PositionComponent
 import com.lastwords.ashley.spawner.SpawnableClass
 import com.lastwords.ashley.stats.Damage
@@ -20,17 +22,19 @@ import com.lastwords.ashley.stats.StatsComponent
 import com.lastwords.ashley.velocity.VelocityComponent
 import com.lastwords.ashley.world.ContactComponent
 import com.lastwords.ashley.world.ContactImpl
+import com.lastwords.states.PlayState
 
 class MobOne: Entity(), SpawnableClass {
 
-    var positionComponent: PositionComponent = PositionComponent(0f, 0f)
+    private var bodyComponent: BodyComponent
 
     init {
+        val positionComponent = PositionComponent(100f, 50f)
         add(positionComponent)
         add(EntityStateComponent())
         add(VelocityComponent())
         val statsComponent = StatsComponent()
-        statsComponent.speed = 30f
+        statsComponent.speed = 15f
         statsComponent.healthPoints = 3
         statsComponent.attack = 1
         add(statsComponent)
@@ -39,12 +43,15 @@ class MobOne: Entity(), SpawnableClass {
         add(propertiesComponent)
         val circleShape = CircleShape()
         circleShape.radius = propertiesComponent.width
-        val bodyComponent = BodyComponent(positionComponent.position, BodyDef.BodyType.DynamicBody)
+        val playerSensor = CircleShape()
+        playerSensor.radius = 500f
+        bodyComponent = BodyComponent(positionComponent.position, BodyDef.BodyType.DynamicBody)
         add(bodyComponent)
         add(FixtureComponent(
                 bodyComponent.body,
                 mutableListOf(
-                        ContactSensor(this, circleShape, FixtureType.SENSOR, MobOneSensor, true)
+                        ContactSensor(this, circleShape, FixtureType.SENSOR, MobOneSensor, true),
+                        ContactSensor(this, playerSensor, FixtureType.SENSOR, MobOnePlayerSensor, false)
                 )
         ))
 
@@ -52,8 +59,7 @@ class MobOne: Entity(), SpawnableClass {
     }
 
     override fun setPosition(position: Vector2) {
-        positionComponent.position.x = position.x
-        positionComponent.position.y = position.y
+        bodyComponent.body.setTransform(Vector2(position.x, position.y), bodyComponent.body.angle)
     }
 
 }
@@ -75,4 +81,25 @@ object MobOneSensor: ContactImpl {
     override fun endContact(thisEntity: Entity, contactSensor: ContactSensor, engine: Engine) {
     }
 
+}
+
+object MobOnePlayerSensor: ContactImpl {
+
+    private val trackTargetMapper = ComponentMapper.getFor(TrackTargetComponent::class.java)
+    private val velocityMapper = ComponentMapper.getFor(VelocityComponent::class.java)
+
+    override fun contact(thisEntity: Entity, contactSensor: ContactSensor, engine: Engine) {
+        if (contactSensor.entity is AshleyEntity && contactSensor.linkedState) {
+            thisEntity.add(TrackTargetComponent(contactSensor.entity))
+        }
+    }
+
+    override fun endContact(thisEntity: Entity, contactSensor: ContactSensor, engine: Engine) {
+        if (trackTargetMapper.get(thisEntity) != null
+                && contactSensor.entity is AshleyEntity
+                && contactSensor.linkedState) {
+            thisEntity.remove(TrackTargetComponent::class.java)
+            velocityMapper.get(thisEntity).stop()
+        }
+    }
 }

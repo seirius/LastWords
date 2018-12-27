@@ -15,4 +15,8 @@ class VelocityComponent : Component {
         this.velocity = velocity
     }
 
+    fun stop() {
+        velocity = Vector2()
+    }
+
 }

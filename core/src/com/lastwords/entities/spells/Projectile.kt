@@ -21,6 +21,7 @@ import com.lastwords.ashley.world.ContactComponent
 import com.lastwords.ashley.world.ContactImpl
 import com.lastwords.util.angleMagnitudeToVector
 import com.lastwords.util.angleToTarget
+import com.lastwords.util.isAboutToDie
 
 class Projectile(
         initPosition: Vector2,
@@ -62,7 +63,7 @@ object ProjectileContact: ContactImpl {
     private val velocityMapper = ComponentMapper.getFor(VelocityComponent::class.java)
 
     override fun contact(thisEntity: Entity, contactSensor: ContactSensor, engine: Engine) {
-        if (contactSensor.linkedState) {
+        if (!thisEntity.isAboutToDie() && contactSensor.linkedState) {
             val thisEntityStats = statsMapper.get(thisEntity)
             val entityStats = statsMapper.get(contactSensor.entity)
             if (contactSensor.entity is Projectile) {

@@ -13,6 +13,7 @@ import com.lastwords.ashley.draw.DrawSystem
 import com.lastwords.ashley.draw.GUISystem
 import com.lastwords.ashley.draw.TextSystem
 import com.lastwords.ashley.move.MoveToTargetSystem
+import com.lastwords.ashley.move.TrackTargetSystem
 import com.lastwords.ashley.player.PlayerBehaviourSystem
 import com.lastwords.ashley.spawner.SpawnerSystem
 import com.lastwords.ashley.spells.CastSystem
@@ -46,6 +47,7 @@ class PlayState(gameStateManager: GameStateManager): State(gameStateManager) {
         engine.addSystem(SpawnerSystem())
         engine.addSystem(CastSystem())
         engine.addSystem(MoveToTargetSystem())
+        engine.addSystem(TrackTargetSystem())
         engine.addSystem(VelocitySystem())
         engine.addSystem(StatsSystem())
         engine.addSystem(DistanceLimitSystem())
@@ -63,7 +65,8 @@ class PlayState(gameStateManager: GameStateManager): State(gameStateManager) {
         engine.addEntity(CastBar(ashleyEntity))
         engine.addEntity(SpellSelectedBar(ashleyEntity))
         engine.addEntity(EnergyBar(ashleyEntity))
-        engine.addEntity(Spawner(MobOne::class.java, Vector2(0f, 0f), 5f, 1))
+        engine.addEntity(Spawner(MobOne::class.java, Vector2(0f, 0f), 5f, 0))
+        engine.addEntity(Spawner(MobOne::class.java, Vector2(100f, 50f), 5f, 0))
     }
 
     override fun handleInput() {
