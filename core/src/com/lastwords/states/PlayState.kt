@@ -66,10 +66,10 @@ class PlayState(gameStateManager: GameStateManager): State(gameStateManager) {
         engine.addEntity(Wall(Vector2(0f, 125f), WallDirection.VERTICAL, 500f))
         engine.addEntity(Wall(Vector2(125f, 0f), WallDirection.HORIZONTAL, 500f))
         engine.addEntity(Wall(Vector2(0f, -125f), WallDirection.VERTICAL, 500f))
-        engine.addEntity(Spawner(MobOne::class.java, Vector2(-220f, -220f), 5f, 0))
-        engine.addEntity(Spawner(MobOne::class.java, Vector2(220f, -220f), 5f, 0))
-        engine.addEntity(Spawner(MobOne::class.java, Vector2(-220f, 220f), 5f, 0))
-        engine.addEntity(Spawner(MobOne::class.java, Vector2(220f, 220f), 5f, 0))
+//        engine.addEntity(Spawner(MobOne::class.java, Vector2(-220f, -220f), 5f, 0))
+//        engine.addEntity(Spawner(MobOne::class.java, Vector2(220f, -220f), 5f, 0))
+//        engine.addEntity(Spawner(MobOne::class.java, Vector2(-220f, 220f), 5f, 0))
+//        engine.addEntity(Spawner(MobOne::class.java, Vector2(220f, 220f), 5f, 0))
     }
 
     override fun handleInput() {

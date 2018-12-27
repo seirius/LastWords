@@ -1,9 +1,13 @@
 package com.lastwords.entities
 
 import com.badlogic.ashley.core.Entity
+import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.Animation
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.CircleShape
+import com.lastwords.ashley.animation.AnimationComponent
 import com.lastwords.ashley.body.BodyComponent
 import com.lastwords.ashley.body.ContactSensor
 import com.lastwords.ashley.body.FixtureComponent
@@ -15,6 +19,7 @@ import com.lastwords.ashley.spells.CastComponent
 import com.lastwords.ashley.spells.TargetComponent
 import com.lastwords.ashley.stats.PropertiesComponent
 import com.lastwords.ashley.stats.StatsComponent
+import com.lastwords.ashley.texture.TextureComponent
 import com.lastwords.ashley.velocity.VelocityComponent
 import com.lastwords.ashley.world.AddToWorldComponent
 import com.lastwords.ashley.world.ContactComponent
@@ -44,6 +49,18 @@ class AshleyEntity(xPosition: Float, yPosition: Float, speed: Float) : Entity() 
         add(PlayerComponent())
         add(TargetComponent())
         add(ContactComponent())
+
+        val texture = Texture("micro/PNG/Human/human_regular_bald.png")
+        val tmp = TextureRegion.split(texture, texture.width / 9, texture.height / 2)
+        val textureRegions: Array<TextureRegion?> = Array(9 * 2) { null}
+        var index = 0
+        for (i in (0..1)) {
+            for (j in (0..8)) {
+                textureRegions[index++] = tmp[i][j]
+            }
+        }
+        add(TextureComponent())
+        add(AnimationComponent(Animation<TextureRegion>(0.25f, *textureRegions)))
     }
 
 }
