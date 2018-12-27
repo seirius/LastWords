@@ -71,6 +71,8 @@ object ProjectileContact: ContactImpl {
                 velocityMapper.get(contactSensor.entity).velocity.scl(2f)
                 thisEntityStats.attack += entityStats.attack
                 entityStats.attack += thisEntityStats.attack
+            } else if (contactSensor.fixtureType === FixtureType.WALL) {
+                thisEntity.add(DeathComponent())
             } else {
                 entityStats.damageReceived.add(Damage(thisEntityStats.attack))
                 thisEntity.add(DeathComponent())

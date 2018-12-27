@@ -21,10 +21,7 @@ import com.lastwords.ashley.stats.StatsSystem
 import com.lastwords.ashley.velocity.VelocitySystem
 import com.lastwords.ashley.world.CameraSystem
 import com.lastwords.ashley.world.WorldSystem
-import com.lastwords.entities.AshleyEntity
-import com.lastwords.entities.MobOne
-import com.lastwords.entities.Prometheus
-import com.lastwords.entities.Spawner
+import com.lastwords.entities.*
 import com.lastwords.entities.gui.CastBar
 import com.lastwords.entities.gui.EnergyBar
 import com.lastwords.entities.gui.HealthPointsBar
@@ -60,13 +57,19 @@ class PlayState(gameStateManager: GameStateManager): State(gameStateManager) {
         engine.addSystem(GUISystem(guiCamera, gameStateManager.spriteBatch))
         ashleyEntity = AshleyEntity(16f, 16f, 30f)
         engine.addEntity(ashleyEntity)
-        engine.addEntity(Prometheus(Vector2(200f, 200f)))
+//        engine.addEntity(Prometheus(Vector2(200f, 200f)))
         engine.addEntity(HealthPointsBar(ashleyEntity))
         engine.addEntity(CastBar(ashleyEntity))
         engine.addEntity(SpellSelectedBar(ashleyEntity))
         engine.addEntity(EnergyBar(ashleyEntity))
-        engine.addEntity(Spawner(MobOne::class.java, Vector2(0f, 0f), 5f, 0))
-        engine.addEntity(Spawner(MobOne::class.java, Vector2(100f, 50f), 5f, 0))
+        engine.addEntity(Wall(Vector2(-125f, 0f), WallDirection.HORIZONTAL, 500f))
+        engine.addEntity(Wall(Vector2(0f, 125f), WallDirection.VERTICAL, 500f))
+        engine.addEntity(Wall(Vector2(125f, 0f), WallDirection.HORIZONTAL, 500f))
+        engine.addEntity(Wall(Vector2(0f, -125f), WallDirection.VERTICAL, 500f))
+        engine.addEntity(Spawner(MobOne::class.java, Vector2(-220f, -220f), 5f, 0))
+        engine.addEntity(Spawner(MobOne::class.java, Vector2(220f, -220f), 5f, 0))
+        engine.addEntity(Spawner(MobOne::class.java, Vector2(-220f, 220f), 5f, 0))
+        engine.addEntity(Spawner(MobOne::class.java, Vector2(220f, 220f), 5f, 0))
     }
 
     override fun handleInput() {

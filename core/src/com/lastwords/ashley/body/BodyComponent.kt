@@ -31,7 +31,7 @@ class BodyComponent(
 class NoBodyComponent: Component
 
 enum class FixtureType {
-    MAIN, SENSOR
+    MAIN, SENSOR, WALL
 }
 
 class ContactSensor(
