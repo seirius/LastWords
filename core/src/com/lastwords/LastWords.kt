@@ -34,6 +34,6 @@ class LastWords : ApplicationAdapter() {
         const val TITLE = "LastWords"
         const val WIDTH = 1200
         const val HEIGHT = 720
-        const val SCALE = 1.8f
+        const val SCALE = 3f
     }
 }

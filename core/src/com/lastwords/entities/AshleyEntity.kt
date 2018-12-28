@@ -50,11 +50,11 @@ class AshleyEntity(xPosition: Float, yPosition: Float, speed: Float) : Entity() 
         add(TargetComponent())
         add(ContactComponent())
 
-        val texture = Texture("micro/PNG/Human/human_walk.png")
-        val tmp = TextureRegion.split(texture, texture.width / 8, texture.height)
-        val textureRegions: Array<TextureRegion?> = Array(8) { null }
+        val texture = Texture("micro/PNG/Human/temp.png")
+        val tmp = TextureRegion.split(texture, texture.width / 4, texture.height)
+        val textureRegions: Array<TextureRegion?> = Array(4) { null }
         var index = 0
-        for (j in (0..7)) {
+        for (j in (0..3)) {
             textureRegions[index++] = tmp[0][j]
         }
         add(TextureComponent())
