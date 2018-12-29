@@ -3,9 +3,14 @@ package com.lastwords.entities
 import com.badlogic.ashley.core.ComponentMapper
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
+import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.Animation
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.CircleShape
+import com.badlogic.gdx.physics.box2d.PolygonShape
+import com.lastwords.ashley.animation.AnimationComponent
 import com.lastwords.ashley.body.BodyComponent
 import com.lastwords.ashley.body.ContactSensor
 import com.lastwords.ashley.body.FixtureComponent
@@ -19,6 +24,7 @@ import com.lastwords.ashley.spawner.SpawnableClass
 import com.lastwords.ashley.stats.Damage
 import com.lastwords.ashley.stats.PropertiesComponent
 import com.lastwords.ashley.stats.StatsComponent
+import com.lastwords.ashley.texture.TextureComponent
 import com.lastwords.ashley.velocity.VelocityComponent
 import com.lastwords.ashley.world.ContactComponent
 import com.lastwords.ashley.world.ContactImpl
@@ -41,8 +47,10 @@ class MobOne: Entity(), SpawnableClass {
 
         val propertiesComponent = PropertiesComponent(5f, 5f)
         add(propertiesComponent)
-        val circleShape = CircleShape()
-        circleShape.radius = propertiesComponent.width
+
+        val polygonShape = PolygonShape()
+        polygonShape.setAsBox(5.5f, 6f)
+
         val playerSensor = CircleShape()
         playerSensor.radius = 500f
         bodyComponent = BodyComponent(positionComponent.position, BodyDef.BodyType.DynamicBody)
@@ -50,12 +58,36 @@ class MobOne: Entity(), SpawnableClass {
         add(FixtureComponent(
                 bodyComponent.body,
                 mutableListOf(
-                        ContactSensor(this, circleShape, FixtureType.SENSOR, MobOneSensor, true),
+                        ContactSensor(this, polygonShape, FixtureType.SENSOR, MobOneSensor, true),
                         ContactSensor(this, playerSensor, FixtureType.SENSOR, MobOnePlayerSensor, false)
                 )
         ))
 
         add(ContactComponent())
+
+        var texture = Texture("micro/PNG/Human/mob_one.png")
+        val size = 8
+        var tmp = TextureRegion.split(texture, texture.width / size, texture.height)
+        val walkRight: Array<TextureRegion?> = Array(size) { null }
+        var index = 0
+        for (i in (0 until size)) {
+            walkRight[index++] = tmp[0][i]
+        }
+
+        texture = Texture("micro/PNG/Human/mob_one_left.png")
+        tmp = TextureRegion.split(texture, texture.width / size, texture.height)
+        val walkLeft: Array<TextureRegion?> = Array(size) { null }
+        index = 0
+        for (i in (0 until size)) {
+            walkLeft[index++] = tmp[0][i]
+        }
+        walkLeft.reverse()
+
+        val walkRightAnimation = Animation<TextureRegion>(0.15f, *walkRight)
+        val walkLeftAnimation = Animation<TextureRegion>(0.15f, *walkLeft)
+
+        add(TextureComponent())
+        add(AnimationComponent(walkRightAnimation, walkLeftAnimation, walkRightAnimation))
     }
 
     override fun setPosition(position: Vector2) {

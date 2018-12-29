@@ -1,6 +1,8 @@
 package com.lastwords.entities.spells
 
 import com.badlogic.ashley.core.*
+import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.CircleShape
@@ -15,6 +17,7 @@ import com.lastwords.ashley.position.PositionComponent
 import com.lastwords.ashley.stats.Damage
 import com.lastwords.ashley.stats.PropertiesComponent
 import com.lastwords.ashley.stats.StatsComponent
+import com.lastwords.ashley.texture.TextureComponent
 import com.lastwords.ashley.velocity.VelocityComponent
 import com.lastwords.ashley.world.AddToWorldComponent
 import com.lastwords.ashley.world.ContactComponent
@@ -54,6 +57,11 @@ class Projectile(
         add(VelocityComponent())
         add(TimeLimitComponent(2f))
         add(ContactComponent())
+
+        val textureComponent = TextureComponent()
+        val texture = Texture("micro/PNG/Human/fireball.png")
+        textureComponent.textureRegion = TextureRegion(texture, 0f, 0f, texture.width.toFloat(), texture.height.toFloat())
+        add(textureComponent)
     }
 
 }

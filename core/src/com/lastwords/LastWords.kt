@@ -35,6 +35,6 @@ class LastWords : ApplicationAdapter() {
         const val WIDTH = 1200
         const val HEIGHT = 720
         const val SCALE = 2.5f
-        const val DEBUGBOX2D = false
+        const val DEBUGBOX2D = true
     }
 }
