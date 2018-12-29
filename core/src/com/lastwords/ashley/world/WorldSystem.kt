@@ -9,7 +9,6 @@ import com.lastwords.ashley.body.BodyComponent
 import com.lastwords.ashley.body.ContactRes
 import com.lastwords.ashley.body.ContactSensor
 import com.lastwords.ashley.position.PositionComponent
-import com.lastwords.entities.PrometheusSensor
 
 class WorldSystem(private val world: World) : EntitySystem(), ContactListener {
 
@@ -63,7 +62,7 @@ class WorldSystem(private val world: World) : EntitySystem(), ContactListener {
     }
 
     fun render(combined: Matrix4) {
-        if (LastWords.DEBUGBOX2D) {
+        if (LastWords.DEBUG_BOX2D) {
             renderer.render(world, combined)
         }
     }

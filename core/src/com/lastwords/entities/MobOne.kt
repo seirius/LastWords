@@ -52,13 +52,13 @@ class MobOne: Entity(), SpawnableClass {
         polygonShape.setAsBox(5.5f, 6f)
 
         val playerSensor = CircleShape()
-        playerSensor.radius = 500f
+        playerSensor.radius = 32f
         bodyComponent = BodyComponent(positionComponent.position, BodyDef.BodyType.DynamicBody)
         add(bodyComponent)
         add(FixtureComponent(
                 bodyComponent.body,
                 mutableListOf(
-                        ContactSensor(this, polygonShape, FixtureType.SENSOR, MobOneSensor, true),
+                        ContactSensor(this, polygonShape, FixtureType.MAIN, MobOneSensor, true),
                         ContactSensor(this, playerSensor, FixtureType.SENSOR, MobOnePlayerSensor, false)
                 )
         ))
@@ -67,27 +67,32 @@ class MobOne: Entity(), SpawnableClass {
 
         var texture = Texture("micro/PNG/Human/mob_one.png")
         val size = 8
-        var tmp = TextureRegion.split(texture, texture.width / size, texture.height)
-        val walkRight: Array<TextureRegion?> = Array(size) { null }
+        var tmpRight = TextureRegion.split(texture, texture.width / size, texture.height)
+        val walkRight: Array<TextureRegion?> = Array(size - 4) { null }
         var index = 0
         for (i in (0 until size)) {
-            walkRight[index++] = tmp[0][i]
+            if (i > 3) {
+                walkRight[index++] = tmpRight[0][i]
+            }
         }
 
         texture = Texture("micro/PNG/Human/mob_one_left.png")
-        tmp = TextureRegion.split(texture, texture.width / size, texture.height)
-        val walkLeft: Array<TextureRegion?> = Array(size) { null }
+        var tmpLeft = TextureRegion.split(texture, texture.width / size, texture.height)
+        val walkLeft: Array<TextureRegion?> = Array(size - 4) { null }
         index = 0
         for (i in (0 until size)) {
-            walkLeft[index++] = tmp[0][i]
+            if (i < 4) {
+                walkLeft[index++] = tmpLeft[0][i]
+            }
         }
         walkLeft.reverse()
 
         val walkRightAnimation = Animation<TextureRegion>(0.15f, *walkRight)
         val walkLeftAnimation = Animation<TextureRegion>(0.15f, *walkLeft)
+        val stillAnimation = Animation<TextureRegion>(1f, tmpRight[0][2])
 
         add(TextureComponent())
-        add(AnimationComponent(walkRightAnimation, walkLeftAnimation, walkRightAnimation))
+        add(AnimationComponent(stillAnimation, walkLeftAnimation, walkRightAnimation))
     }
 
     override fun setPosition(position: Vector2) {
@@ -100,7 +105,7 @@ object MobOneSensor: ContactImpl {
     private val statsMapper = ComponentMapper.getFor(StatsComponent::class.java)
 
     override fun contact(thisEntity: Entity, contactSensor: ContactSensor, engine: Engine) {
-        if (contactSensor.entity is MobOne || !contactSensor.linkedState) {
+        if (contactSensor.entity is MobOne || !contactSensor.linkedState || contactSensor.entity is Wall) {
             return
         }
 

@@ -46,6 +46,8 @@ class AshleyEntity(xPosition: Float, yPosition: Float, speed: Float) : Entity() 
         statsComponent.speed = speed
         statsComponent.healthPoints = 5
         statsComponent.energy = 100
+        statsComponent.maxEnergy = 1000
+        statsComponent.energyReg = 20
         add(statsComponent)
         add(PlayerComponent())
         add(TargetComponent())

@@ -17,14 +17,20 @@ class CastComponent : Component {
 }
 
 enum class SpellTypes(val value: IntArray, val cost: Int) {
-    FIRE_BALL(intArrayOf(45, 34), 10)
+    FIRE_BALL(intArrayOf(45, 34), 10),
+    FIRE_HELL(intArrayOf(45, 45, 34), 30)
 }
 
 object Spells {
     fun tryCast(pile: MutableList<Int>, cleanAfter: Boolean = true): SpellTypes? {
         for (key in (0 until pile.size)) {
             val preSpell: IntArray = pile.slice(0..key).toIntArray()
-            if (preSpell.contentEquals(SpellTypes.FIRE_BALL.value)) {
+            if (preSpell.contentEquals(SpellTypes.FIRE_HELL.value)) {
+                if (cleanAfter) {
+                    pile.clear()
+                }
+                return SpellTypes.FIRE_HELL
+            } else if (preSpell.contentEquals(SpellTypes.FIRE_BALL.value)) {
                 if (cleanAfter) {
                     pile.clear()
                 }

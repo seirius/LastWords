@@ -3,6 +3,7 @@ package com.lastwords.ashley.spells
 import com.badlogic.ashley.core.*
 import com.badlogic.ashley.utils.ImmutableArray
 import com.badlogic.gdx.Input
+import com.badlogic.gdx.math.Vector2
 import com.lastwords.ashley.entities.EntityStateComponent
 import com.lastwords.ashley.orders.CastOrderComponent
 import com.lastwords.ashley.orders.FireSpellComponent
@@ -66,6 +67,20 @@ class CastSystem : EntitySystem() {
                                 targetMapper.get(entity).target,
                                 60f, propertiesMapper.get(entity).width
                         ))
+                    } else if (spell == SpellTypes.FIRE_HELL && statsComponent.energy >= SpellTypes.FIRE_HELL.cost) {
+                        statsComponent.energy -= SpellTypes.FIRE_HELL.cost
+                        val targetComponent = targetMapper.get(entity)
+                        val targetPosition = targetComponent.target
+                        val positions = arrayOf(
+                                targetPosition.cpy(), targetPosition.cpy().add(-5f, 0f),
+                                targetPosition.cpy().add(5f, 0f), targetPosition.cpy().add(0f, 5f),
+                                targetPosition.cpy().add(0f, -5f)
+                        )
+                        for (position in positions) {
+                            engine.addEntity(Projectile(
+                                    position, null, 0f, 0f, 10f
+                            ))
+                        }
                     }
                 }
             }

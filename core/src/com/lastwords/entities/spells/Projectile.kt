@@ -2,10 +2,12 @@ package com.lastwords.entities.spells
 
 import com.badlogic.ashley.core.*
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.CircleShape
+import com.lastwords.ashley.animation.AnimationComponent
 import com.lastwords.ashley.body.BodyComponent
 import com.lastwords.ashley.body.ContactSensor
 import com.lastwords.ashley.body.FixtureComponent
@@ -28,17 +30,21 @@ import com.lastwords.util.isAboutToDie
 
 class Projectile(
         initPosition: Vector2,
-        targetPosition: Vector2,
+        targetPosition: Vector2? = null,
         speed: Float,
-        offset: Float
+        offset: Float,
+        duration: Float = 2f
 ) : Entity() {
 
 
     init {
         val statsComponent = StatsComponent()
-        val propertiesComponent = PropertiesComponent(3f, 3f)
-        initPosition.add(angleMagnitudeToVector(initPosition
-                .angleToTarget(targetPosition), offset + 1).scl(propertiesComponent.width / 2 + 1))
+        val propertiesComponent = PropertiesComponent(2f, 2f)
+        if (targetPosition != null) {
+            initPosition.add(angleMagnitudeToVector(initPosition
+                    .angleToTarget(targetPosition), offset + 1).scl(propertiesComponent.width / 2 + 1))
+            add(ToTargetComponent(targetPosition))
+        }
         statsComponent.speed = speed
         statsComponent.healthPoints = 1
         statsComponent.attack = 1
@@ -53,15 +59,21 @@ class Projectile(
         )))
         add(AddToWorldComponent())
         add(PositionComponent(initPosition.x, initPosition.y))
-        add(ToTargetComponent(targetPosition))
         add(VelocityComponent())
-        add(TimeLimitComponent(2f))
+        add(TimeLimitComponent(duration))
         add(ContactComponent())
 
-        val textureComponent = TextureComponent()
         val texture = Texture("micro/PNG/Human/fireball.png")
-        textureComponent.textureRegion = TextureRegion(texture, 0f, 0f, texture.width.toFloat(), texture.height.toFloat())
-        add(textureComponent)
+        val size = 3
+        var tmp = TextureRegion.split(texture, texture.width / size, texture.height)
+        val walk: Array<TextureRegion?> = Array(size) { null }
+        var index = 0
+        for (i in (0 until size)) {
+            walk[index++] = tmp[0][i]
+        }
+        val animation = Animation<TextureRegion>(0.15f, *walk)
+        add(TextureComponent())
+        add(AnimationComponent(animation, animation, animation, animation))
     }
 
 }
