@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2
 class VelocityComponent : Component {
 
     var velocity: Vector2
+    var updateFaceAngle = false
 
     constructor() {
         this.velocity = Vector2()

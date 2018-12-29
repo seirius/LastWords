@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.*
 import com.badlogic.ashley.utils.ImmutableArray
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.physics.box2d.*
+import com.lastwords.LastWords
 import com.lastwords.ashley.body.BodyComponent
 import com.lastwords.ashley.body.ContactRes
 import com.lastwords.ashley.body.ContactSensor
@@ -62,7 +63,9 @@ class WorldSystem(private val world: World) : EntitySystem(), ContactListener {
     }
 
     fun render(combined: Matrix4) {
-        renderer.render(world, combined)
+        if (LastWords.DEBUGBOX2D) {
+            renderer.render(world, combined)
+        }
     }
 
     override fun endContact(contact: Contact?) {

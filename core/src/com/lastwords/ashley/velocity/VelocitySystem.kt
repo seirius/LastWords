@@ -42,7 +42,11 @@ class VelocitySystem : EntitySystem() {
                 if (!velocityComponent.velocity.isZero) {
                     val finalVelocity = velocityComponent.velocity.cpy().scl(deltaTime)
                     body.linearVelocity = finalVelocity
-                    body.setTransform(body.position, finalVelocity.angleRad())
+                    var angle = 0f
+                    if (velocityComponent.updateFaceAngle) {
+                        angle = finalVelocity.angleRad()
+                    }
+                    body.setTransform(body.position, angle)
                 } else {
                     body.linearVelocity = Vector2.Zero
                 }

@@ -11,11 +11,13 @@ abstract class State(protected var gameStateManager: GameStateManager) {
 
     protected var camera: OrthographicCamera = OrthographicCamera()
     protected var guiCamera: OrthographicCamera = OrthographicCamera()
+    protected var box2dCamera: OrthographicCamera = OrthographicCamera()
 
     protected abstract fun handleInput()
     abstract fun update(dt: Float)
     abstract fun render(spriteBatch: SpriteBatch?)
     abstract fun dispose()
+
     open fun resize(width: Int, height: Int) {
         CURRENT_WIDTH = width / LastWords.SCALE
         CURRENT_HEIGHT = height / LastWords.SCALE
@@ -23,8 +25,10 @@ abstract class State(protected var gameStateManager: GameStateManager) {
         CURRENT_SIZE.y = CURRENT_HEIGHT
         camera.setToOrtho(false, CURRENT_WIDTH, CURRENT_HEIGHT)
         guiCamera.setToOrtho(false, CURRENT_WIDTH, CURRENT_HEIGHT)
+        box2dCamera.setToOrtho(false, CURRENT_WIDTH, CURRENT_HEIGHT)
         gameStateManager.spriteBatch.projectionMatrix = camera.combined
     }
+
     fun getWorldMousePosition(): Vector2 {
         val position = camera.unproject(Vector3(Gdx.input.x.toFloat(), Gdx.input.y.toFloat(), 0f))
         return Vector2(position.x, position.y)

@@ -1,17 +1,20 @@
 package com.lastwords.states
 
 import com.badlogic.ashley.core.Engine
+import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
 import com.lastwords.LastWords
 import com.lastwords.ashley.animation.AnimationSystem
+import com.lastwords.ashley.animation.AshleyEntityAnimationSystem
 import com.lastwords.ashley.death.DeathSystem
 import com.lastwords.ashley.deathcondition.DistanceLimitSystem
 import com.lastwords.ashley.deathcondition.TimeLimitSystem
 import com.lastwords.ashley.draw.DrawSystem
 import com.lastwords.ashley.draw.GUISystem
 import com.lastwords.ashley.draw.TextSystem
+import com.lastwords.ashley.entities.EntityStateSystem
 import com.lastwords.ashley.move.MoveToTargetSystem
 import com.lastwords.ashley.move.TrackTargetSystem
 import com.lastwords.ashley.player.PlayerBehaviourSystem
@@ -35,8 +38,6 @@ class PlayState(gameStateManager: GameStateManager): State(gameStateManager) {
 
     init {
         world = World(Vector2.Zero, true)
-        camera.setToOrtho(false, LastWords.WIDTH / LastWords.SCALE, LastWords.HEIGHT / LastWords.SCALE)
-        guiCamera.setToOrtho(false, LastWords.WIDTH / LastWords.SCALE, LastWords.HEIGHT / LastWords.SCALE)
         worldSystem = WorldSystem(world!!)
         engine = gameStateManager.engine
         engine.addSystem(worldSystem)
@@ -50,14 +51,16 @@ class PlayState(gameStateManager: GameStateManager): State(gameStateManager) {
         engine.addSystem(DistanceLimitSystem())
         engine.addSystem(TimeLimitSystem())
         engine.addSystem(DeathSystem())
+        engine.addSystem(EntityStateSystem())
         engine.addSystem(DrawSystem(gameStateManager.spriteBatch))
         engine.addSystem(TextSystem(gameStateManager.spriteBatch))
+        engine.addSystem(AshleyEntityAnimationSystem())
         engine.addSystem(AnimationSystem())
-        engine.addSystem(CameraSystem(camera))
         engine.addSystem(GUISystem(guiCamera, gameStateManager.spriteBatch))
+        engine.addSystem(CameraSystem(arrayOf(camera, box2dCamera)))
         ashleyEntity = AshleyEntity(16f, 16f, 30f)
         engine.addEntity(ashleyEntity)
-//        engine.addEntity(Prometheus(Vector2(200f, 200f)))
+        engine.addEntity(Prometheus(Vector2(200f, 200f)))
         engine.addEntity(HealthPointsBar(ashleyEntity))
         engine.addEntity(CastBar(ashleyEntity))
         engine.addEntity(SpellSelectedBar(ashleyEntity))
@@ -82,7 +85,7 @@ class PlayState(gameStateManager: GameStateManager): State(gameStateManager) {
 
     override fun render(spriteBatch: SpriteBatch?) {
         spriteBatch!!.projectionMatrix = camera.combined
-        worldSystem.render(camera.combined)
+        worldSystem.render(box2dCamera.combined)
     }
 
     override fun dispose() {

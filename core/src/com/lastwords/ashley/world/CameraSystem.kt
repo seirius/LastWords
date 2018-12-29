@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector3
 import com.lastwords.ashley.player.PlayerComponent
 import com.lastwords.ashley.position.PositionComponent
 
-class CameraSystem(private val camera: OrthographicCamera): EntitySystem() {
+class CameraSystem(private val cameras: Array<OrthographicCamera>): EntitySystem() {
 
     private lateinit var entities: ImmutableArray<Entity>
 
@@ -23,8 +23,10 @@ class CameraSystem(private val camera: OrthographicCamera): EntitySystem() {
     override fun update(deltaTime: Float) {
         for (entity in entities) {
             val position = positionMapper.get(entity).position
-            camera.position.set(Vector3(position.x, position.y, 0f))
-            camera.update()
+            for (camera in cameras) {
+                camera.position.set(Vector3(position.x, position.y, 0f))
+                camera.update()
+            }
         }
     }
 
