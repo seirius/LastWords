@@ -10,7 +10,7 @@ class SpellSelectedBar(override var trackEntity: Entity): Entity(), GUIEntity {
 
     init {
         add(TextGUIComponent())
-        add(PositionComponent(State.CURRENT_WIDTH - 100f, 30f))
+        add(PositionComponent(State.CURRENT_WIDTH, 30f))
         add(SpellSelectedBarComponent())
     }
 

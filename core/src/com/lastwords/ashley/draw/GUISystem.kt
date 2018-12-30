@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.lastwords.ashley.entities.EntityStateComponent
 import com.lastwords.ashley.position.PositionComponent
 import com.lastwords.ashley.spells.CastComponent
@@ -16,7 +16,6 @@ import com.lastwords.ashley.spells.Spell
 import com.lastwords.ashley.stats.StatsComponent
 import com.lastwords.entities.gui.*
 import com.lastwords.states.State
-import java.lang.StringBuilder
 
 class GUISystem(
         private var guiCamera: OrthographicCamera,
@@ -38,16 +37,10 @@ class GUISystem(
 
     private val castMapper = ComponentMapper.getFor(CastComponent::class.java)
 
-    private val font: BitmapFont?
+    private val font: BitmapFont = BitmapFont(Gdx.files.internal(TextSystem.PATH_TO_FONT))
 
     init {
-        val generator = FreeTypeFontGenerator(Gdx.files.internal(TextSystem.PATH_TO_FONT))
-        val parameter = FreeTypeFontGenerator.FreeTypeFontParameter()
-        parameter.size = 10
-        parameter.magFilter = Texture.TextureFilter.Linear
-        parameter.minFilter = Texture.TextureFilter.Linear
-        font = generator.generateFont(parameter)
-        generator.dispose()
+        font.data.setScale(.06f)
     }
 
     override fun addedToEngine(engine: Engine?) {
@@ -111,7 +104,7 @@ class GUISystem(
             if (entity is GUIEntity) {
                 val castComponent = castMapper.get(entity.trackEntity)
                 if (castComponent != null) {
-                    positionMapper.get(entity).position.x = State.CURRENT_WIDTH - 100f
+                    positionMapper.get(entity).position.x = State.CURRENT_WIDTH - 60f
                     val text = StringBuilder()
                     for (spell in Spell.values()) {
                         text.append("[${spell.name}:${castComponent.spells[spell]?.name}]\n")
@@ -126,7 +119,7 @@ class GUISystem(
                 val statsComponent = statsMapper.get(entity.trackEntity)
                 if (statsComponent != null) {
                     val positionComponent = positionMapper.get(entity)
-                    positionComponent.position.x = State.CURRENT_WIDTH - 80f
+                    positionComponent.position.x = State.CURRENT_WIDTH - 50f
                     positionComponent.position.y = State.CURRENT_HEIGHT - 10f
 
                     textGUIMapper.get(entity).text = "ENERGY: ${statsComponent.energy}"
@@ -139,7 +132,7 @@ class GUISystem(
         for (entity in entities) {
             val textComponent = textMapper.get(entity)
             val positionComponent = positionMapper.get(entity)
-            font?.draw(spriteBatch, textComponent.text, positionComponent.position.x, positionComponent.position.y)
+            font.draw(spriteBatch, textComponent.text, positionComponent.position.x, positionComponent.position.y)
         }
         spriteBatch.end()
     }

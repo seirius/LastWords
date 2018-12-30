@@ -13,11 +13,11 @@ import com.lastwords.ashley.velocity.VelocityComponent
 class DamageIndicator(text: String, position: Vector2): Entity() {
 
     init {
-        val offset = (-5..5).random()
-        add(PositionComponent(position.x + offset - 4.5f, position.y + offset))
+        val offset = (-2..2).random()
+        add(PositionComponent(position.x + offset - 4.5f, position.y + offset + 20f))
         add(TextComponent(text))
         add(ToTargetComponent(Vector2(position.x, position.y + 100)))
-        add(DistanceLimitComponent(30f + offset, position))
+        add(DistanceLimitComponent(50f + offset, position))
         add(NoBodyComponent())
         add(VelocityComponent())
         val statsComponent = StatsComponent()

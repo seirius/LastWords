@@ -10,7 +10,7 @@ class HealthPointsBar(override var trackEntity: Entity): Entity(), GUIEntity {
 
     init {
         add(TextGUIComponent())
-        add(PositionComponent(10f, State.CURRENT_HEIGHT - 10f))
+        add(PositionComponent(10f, State.CURRENT_HEIGHT))
         add(HealthPointsComponent())
     }
 

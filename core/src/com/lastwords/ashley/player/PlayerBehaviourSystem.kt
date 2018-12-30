@@ -9,12 +9,14 @@ import com.badlogic.gdx.math.Vector2
 import com.lastwords.ashley.entities.EntityStateComponent
 import com.lastwords.ashley.orders.CastOrderComponent
 import com.lastwords.ashley.orders.FireSpellComponent
+import com.lastwords.ashley.position.PositionComponent
 import com.lastwords.ashley.spells.CastComponent
 import com.lastwords.ashley.spells.Spell
 import com.lastwords.ashley.spells.TargetComponent
 import com.lastwords.ashley.stats.StatsComponent
 import com.lastwords.ashley.velocity.VelocityComponent
 import com.lastwords.ashley.velocity.VelocitySystem
+import com.lastwords.states.PlayState
 import com.lastwords.states.State
 
 class PlayerBehaviourSystem(private var state: State): EntitySystem() {
@@ -56,6 +58,12 @@ class PlayerBehaviourSystem(private var state: State): EntitySystem() {
             }
 
             if (Gdx.input.justTouched()) {
+                val positionComponent = entity.getComponent(PositionComponent::class.java)
+                if (positionComponent != null) {
+                    val blocked = PlayState.tiledMapComponent
+                            ?.isCellBlockedCoord(positionComponent.position.x, positionComponent.position.y)
+                    println("is blocked $blocked at position ${positionComponent.position}")
+                }
                 entity.add(FireSpellComponent(Spell.S1))
             }
             if (!justTouchedRight && auxRightTouched) {

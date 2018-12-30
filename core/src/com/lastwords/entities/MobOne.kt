@@ -37,9 +37,9 @@ import com.lastwords.util.setRadiusPixel
 class MobOne: Entity(), SpawnableClass {
 
     private var bodyComponent: BodyComponent
+    private val positionComponent = PositionComponent(0f, 0f)
 
     init {
-        val positionComponent = PositionComponent(100f, 50f)
         add(positionComponent)
         add(EntityStateComponent())
         add(VelocityComponent())
@@ -100,6 +100,7 @@ class MobOne: Entity(), SpawnableClass {
     }
 
     override fun setPosition(position: Vector2) {
+        positionComponent.position = position.cpy()
         bodyComponent.body.setPositionPixel(position)
     }
 

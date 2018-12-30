@@ -1,14 +1,11 @@
 package com.lastwords.states
 
 import com.badlogic.ashley.core.Engine
-import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
-import com.lastwords.LastWords
 import com.lastwords.ashley.animation.AnimationSystem
 import com.lastwords.ashley.animation.AshleyEntityAnimationSystem
 import com.lastwords.ashley.death.DeathSystem
@@ -24,6 +21,9 @@ import com.lastwords.ashley.player.PlayerBehaviourSystem
 import com.lastwords.ashley.spawner.SpawnerSystem
 import com.lastwords.ashley.spells.CastSystem
 import com.lastwords.ashley.stats.StatsSystem
+import com.lastwords.ashley.tiledmap.TiledMapComponent
+import com.lastwords.ashley.tiledmap.TiledMapSystem
+import com.lastwords.ashley.tiledmap.getObstacles
 import com.lastwords.ashley.velocity.VelocitySystem
 import com.lastwords.ashley.world.CameraSystem
 import com.lastwords.ashley.world.WorldSystem
@@ -39,15 +39,12 @@ class PlayState(gameStateManager: GameStateManager): State(gameStateManager) {
     private val engine: Engine
     private val worldSystem: WorldSystem
 
-    private var tiledMap: TiledMap = TmxMapLoader().load("new_map.tmx")
-    private var tiledMapRenderer: OrthogonalTiledMapRenderer
-
     init {
-        tiledMapRenderer = OrthogonalTiledMapRenderer(tiledMap)
-
         world = World(Vector2.Zero, true)
         worldSystem = WorldSystem(world!!)
         engine = gameStateManager.engine
+        /**SYSTEMS**/
+        engine.addSystem(TiledMapSystem(camera))
         engine.addSystem(worldSystem)
         engine.addSystem(PlayerBehaviourSystem(this))
         engine.addSystem(SpawnerSystem())
@@ -66,6 +63,18 @@ class PlayState(gameStateManager: GameStateManager): State(gameStateManager) {
         engine.addSystem(AnimationSystem())
         engine.addSystem(GUISystem(guiCamera, gameStateManager.spriteBatch))
         engine.addSystem(CameraSystem(arrayOf(camera, box2dCamera)))
+
+
+        /**ENTITIES**/
+        val tiledEntity = Entity()
+        PlayState.tiledMapComponent = TiledMapComponent(TmxMapLoader().load("new_map.tmx"))
+        tiledEntity.add(PlayState.tiledMapComponent)
+        engine.addEntity(tiledEntity)
+        val entities = PlayState.tiledMapComponent!!.tiledMap.getObstacles()
+        for (entity in entities) {
+            engine.addEntity(entity)
+        }
+
         ashleyEntity = AshleyEntity(64f, 64f, 35f)
         engine.addEntity(ashleyEntity)
 //        engine.addEntity(Prometheus(Vector2(200f, 200f)))
@@ -73,10 +82,10 @@ class PlayState(gameStateManager: GameStateManager): State(gameStateManager) {
         engine.addEntity(CastBar(ashleyEntity))
         engine.addEntity(SpellSelectedBar(ashleyEntity))
         engine.addEntity(EnergyBar(ashleyEntity))
-        engine.addEntity(Wall(Vector2(2f, 64f), WallDirection.HORIZONTAL, 216f))
-        engine.addEntity(Wall(Vector2(126f, 64f), WallDirection.HORIZONTAL, 216f))
-        engine.addEntity(Wall(Vector2(64f, 10f), WallDirection.VERTICAL, 248f))
-        engine.addEntity(Wall(Vector2(64f, 118f), WallDirection.VERTICAL, 248f))
+//        engine.addEntity(Wall(Vector2(2f, 64f), WallDirection.HORIZONTAL, 216f))
+//        engine.addEntity(Wall(Vector2(126f, 64f), WallDirection.HORIZONTAL, 216f))
+//        engine.addEntity(Wall(Vector2(64f, 10f), WallDirection.VERTICAL, 248f))
+//        engine.addEntity(Wall(Vector2(64f, 118f), WallDirection.VERTICAL, 248f))
 //        engine.addEntity(Spawner(MobOne::class.java, Vector2(32f, 32f), 2f, 0))
         val mobOne = MobOne()
         mobOne.setPosition(Vector2(100f, 100f))
@@ -91,8 +100,6 @@ class PlayState(gameStateManager: GameStateManager): State(gameStateManager) {
     }
 
     override fun update(dt: Float) {
-        tiledMapRenderer.setView(camera)
-        tiledMapRenderer.render()
         engine.update(dt)
     }
 
@@ -107,5 +114,6 @@ class PlayState(gameStateManager: GameStateManager): State(gameStateManager) {
 
     companion object {
         var world: World? = null
+        var tiledMapComponent: TiledMapComponent? = null
     }
 }
