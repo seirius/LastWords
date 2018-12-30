@@ -35,6 +35,10 @@ class LastWords : ApplicationAdapter() {
         const val WIDTH = 1200
         const val HEIGHT = 720
         const val SCALE = 3f
-        const val DEBUG_BOX2D = false
+        const val DEBUG_BOX2D = true
+//        const val METER_TO_PIXEL = 1f
+        const val METER_TO_PIXEL = 32f
+//        const val PIXEL_TO_METER = 1f
+        const val PIXEL_TO_METER = .03125f
     }
 }

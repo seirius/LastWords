@@ -23,6 +23,8 @@ import com.lastwords.ashley.texture.TextureComponent
 import com.lastwords.ashley.velocity.VelocityComponent
 import com.lastwords.ashley.world.ContactComponent
 import com.lastwords.ashley.world.ContactImpl
+import com.lastwords.util.setAsBoxPixel
+import com.lastwords.util.setRadiusPixel
 
 class Prometheus(
         position: Vector2
@@ -32,12 +34,12 @@ class Prometheus(
         val propertiesComponent = PropertiesComponent(15f, 15f)
         add(propertiesComponent)
         val polygonShape = PolygonShape()
-        polygonShape.setAsBox(7.5f, 8.5f)
+        polygonShape.setAsBoxPixel(7.5f, 8.5f)
         val bodyComponent = BodyComponent(Vector2(position.x, position.y),
                 BodyDef.BodyType.DynamicBody)
         add(bodyComponent)
         val circleShapeSensor = CircleShape()
-        circleShapeSensor.radius = 120f
+        circleShapeSensor.setRadiusPixel(120f)
         add(FixtureComponent(bodyComponent.body, mutableListOf(
                 ContactSensor(this, polygonShape, FixtureType.MAIN),
                 ContactSensor(this, circleShapeSensor, FixtureType.SENSOR,

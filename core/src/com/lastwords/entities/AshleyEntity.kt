@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.CircleShape
 import com.badlogic.gdx.physics.box2d.PolygonShape
+import com.lastwords.LastWords
 import com.lastwords.ashley.animation.AnimationComponent
 import com.lastwords.ashley.body.BodyComponent
 import com.lastwords.ashley.body.ContactSensor
@@ -24,6 +25,7 @@ import com.lastwords.ashley.texture.TextureComponent
 import com.lastwords.ashley.velocity.VelocityComponent
 import com.lastwords.ashley.world.AddToWorldComponent
 import com.lastwords.ashley.world.ContactComponent
+import com.lastwords.util.setAsBoxPixel
 
 class AshleyEntity(xPosition: Float, yPosition: Float, speed: Float) : Entity() {
 
@@ -31,7 +33,7 @@ class AshleyEntity(xPosition: Float, yPosition: Float, speed: Float) : Entity() 
         val propertiesComponent = PropertiesComponent(6f, 6f)
         add(propertiesComponent)
         val polygonShape = PolygonShape()
-        polygonShape.setAsBox(7.5f, 8.5f)
+        polygonShape.setAsBoxPixel(7.5f, 8.5f)
         val bodyComponent = BodyComponent(Vector2(xPosition, yPosition), BodyDef.BodyType.DynamicBody)
         add(bodyComponent)
         add(FixtureComponent(bodyComponent.body, mutableListOf(

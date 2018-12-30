@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.CircleShape
+import com.lastwords.LastWords
 import com.lastwords.ashley.animation.AnimationComponent
 import com.lastwords.ashley.body.BodyComponent
 import com.lastwords.ashley.body.ContactSensor
@@ -36,7 +37,6 @@ class Projectile(
         duration: Float = 2f
 ) : Entity() {
 
-
     init {
         val statsComponent = StatsComponent()
         val propertiesComponent = PropertiesComponent(2f, 2f)
@@ -51,7 +51,7 @@ class Projectile(
         add(statsComponent)
         add(propertiesComponent)
         val circleShape = CircleShape()
-        circleShape.radius = propertiesComponent.width
+        circleShape.radius = propertiesComponent.width * LastWords.PIXEL_TO_METER
         val bodyComponent = BodyComponent(initPosition, BodyDef.BodyType.DynamicBody)
         add(bodyComponent)
         add(FixtureComponent(bodyComponent.body, mutableListOf(

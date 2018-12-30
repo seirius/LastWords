@@ -80,6 +80,6 @@ class VelocitySystem : EntitySystem() {
     }
 
     companion object {
-        const val SPEED_MULTIPLIER = 100f
+        const val SPEED_MULTIPLIER = 3f
     }
 }

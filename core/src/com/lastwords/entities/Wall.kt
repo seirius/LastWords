@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.EdgeShape
+import com.lastwords.LastWords
 import com.lastwords.ashley.body.BodyComponent
 import com.lastwords.ashley.body.ContactSensor
 import com.lastwords.ashley.body.FixtureComponent
@@ -14,14 +15,17 @@ enum class WallDirection {
 }
 
 class Wall(
-        val position: Vector2,
+        var position: Vector2,
         wallDirection: WallDirection,
-        size: Float
+        private var size: Float
 ) : Entity() {
 
     init {
         val bodyComponent = BodyComponent(position, BodyDef.BodyType.StaticBody)
         add(bodyComponent)
+
+        position = position.cpy().scl(LastWords.PIXEL_TO_METER)
+        size *= LastWords.PIXEL_TO_METER
 
         val edgeShape = EdgeShape()
         if (wallDirection == WallDirection.VERTICAL) {

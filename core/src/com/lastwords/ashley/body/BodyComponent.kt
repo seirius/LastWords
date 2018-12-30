@@ -4,9 +4,11 @@ import com.badlogic.ashley.core.Component
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.*
+import com.lastwords.LastWords
 import com.lastwords.ashley.world.ContactComponent
 import com.lastwords.ashley.world.ContactImpl
 import com.lastwords.states.PlayState
+import com.lastwords.util.setPositionPixel
 
 class BodyComponent(
         initPosition: Vector2,
@@ -18,7 +20,7 @@ class BodyComponent(
 
     init {
         bodyDef.type = bodyType
-        bodyDef.position.set(initPosition.cpy())
+        bodyDef.setPositionPixel(initPosition)
 
         body = PlayState.world!!.createBody(bodyDef)
     }

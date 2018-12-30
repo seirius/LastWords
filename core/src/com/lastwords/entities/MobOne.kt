@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.CircleShape
 import com.badlogic.gdx.physics.box2d.PolygonShape
+import com.lastwords.LastWords
 import com.lastwords.ashley.animation.AnimationComponent
 import com.lastwords.ashley.body.BodyComponent
 import com.lastwords.ashley.body.ContactSensor
@@ -29,6 +30,9 @@ import com.lastwords.ashley.velocity.VelocityComponent
 import com.lastwords.ashley.world.ContactComponent
 import com.lastwords.ashley.world.ContactImpl
 import com.lastwords.states.PlayState
+import com.lastwords.util.setAsBoxPixel
+import com.lastwords.util.setPositionPixel
+import com.lastwords.util.setRadiusPixel
 
 class MobOne: Entity(), SpawnableClass {
 
@@ -49,10 +53,10 @@ class MobOne: Entity(), SpawnableClass {
         add(propertiesComponent)
 
         val polygonShape = PolygonShape()
-        polygonShape.setAsBox(5.5f, 6f)
+        polygonShape.setAsBoxPixel(5.5f, 6f)
 
         val playerSensor = CircleShape()
-        playerSensor.radius = 32f
+        playerSensor.setRadiusPixel(32f)
         bodyComponent = BodyComponent(positionComponent.position, BodyDef.BodyType.DynamicBody)
         add(bodyComponent)
         add(FixtureComponent(
@@ -96,7 +100,7 @@ class MobOne: Entity(), SpawnableClass {
     }
 
     override fun setPosition(position: Vector2) {
-        bodyComponent.body.setTransform(Vector2(position.x, position.y), bodyComponent.body.angle)
+        bodyComponent.body.setPositionPixel(position)
     }
 
 }

@@ -9,6 +9,7 @@ import com.lastwords.ashley.body.BodyComponent
 import com.lastwords.ashley.body.ContactRes
 import com.lastwords.ashley.body.ContactSensor
 import com.lastwords.ashley.position.PositionComponent
+import com.lastwords.util.getPositionPixel
 
 class WorldSystem(private val world: World) : EntitySystem(), ContactListener {
 
@@ -40,7 +41,7 @@ class WorldSystem(private val world: World) : EntitySystem(), ContactListener {
             val positionComponent = positionMapper.get(entity)
             val bodyPosition = bodyComponent.body.position
             if (bodyPosition != null && bodyPosition != positionComponent.position) {
-                positionComponent.position = bodyPosition
+                positionComponent.position = bodyComponent.body.getPositionPixel()
             }
         }
 

@@ -21,7 +21,7 @@ class DamageIndicator(text: String, position: Vector2): Entity() {
         add(NoBodyComponent())
         add(VelocityComponent())
         val statsComponent = StatsComponent()
-        statsComponent.speed = 0.5f
+        statsComponent.speed = 30f
         statsComponent.healthPoints = 1
         add(statsComponent)
     }
