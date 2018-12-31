@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.*
 import com.badlogic.ashley.utils.ImmutableArray
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.lastwords.ashley.entities.EntityStateComponent
@@ -14,6 +15,7 @@ import com.lastwords.ashley.spells.CastComponent
 import com.lastwords.ashley.spells.Spell
 import com.lastwords.ashley.spells.TargetComponent
 import com.lastwords.ashley.stats.StatsComponent
+import com.lastwords.ashley.tiledmap.TiledMapComponent
 import com.lastwords.ashley.velocity.VelocityComponent
 import com.lastwords.ashley.velocity.VelocitySystem
 import com.lastwords.states.PlayState
@@ -48,7 +50,8 @@ class PlayerBehaviourSystem(private var state: State): EntitySystem() {
                 entity.add(CastOrderComponent())
             }
 
-            targetMapper.get(entity).target = state.getWorldMousePosition()
+            val targetComponent = targetMapper.get(entity)
+            targetComponent.target = state.getWorldMousePosition()
 
             val stateComponent = entityStateMapper.get(entity)
 
@@ -59,10 +62,24 @@ class PlayerBehaviourSystem(private var state: State): EntitySystem() {
 
             if (Gdx.input.justTouched()) {
                 val positionComponent = entity.getComponent(PositionComponent::class.java)
-                if (positionComponent != null) {
-                    val blocked = PlayState.tiledMapComponent
-                            ?.isCellBlockedCoord(positionComponent.position.x, positionComponent.position.y)
+                val tiledMapComponent = PlayState.tiledMapComponent
+                if (tiledMapComponent != null && positionComponent != null) {
+                    val tiledMap = tiledMapComponent.tiledMap
+                    val blocked = tiledMapComponent.isCellBlockedCoord(
+                            positionComponent.position.x,
+                            positionComponent.position.y
+                    )
                     println("is blocked $blocked at position ${positionComponent.position}")
+
+                    val aiNode = tiledMap.layers["ai_nodes"] as TiledMapTileLayer
+                    val cell = aiNode.getCell(
+                            (targetComponent.target.x / TiledMapComponent.TILE_SIZE).toInt(),
+                            (targetComponent.target.y / TiledMapComponent.TILE_SIZE).toInt()
+                    )
+
+                    if (cell != null) {
+                        println(cell.tile.properties["type"])
+                    }
                 }
                 entity.add(FireSpellComponent(Spell.S1))
             }

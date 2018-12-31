@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset version="1.2" tiledversion="1.2.1" name="dungeon_tileset" tilewidth="16" tileheight="16" tilecount="1024" columns="32">
  <image source="new_2_0/0x72_DungeonTilesetII_v1.1.png" width="512" height="512"/>
+ <tile id="0">
+  <properties>
+   <property name="type" value="WALL"/>
+  </properties>
+ </tile>
  <tile id="129">
   <properties>
    <property name="type" value="FLOOR"/>
