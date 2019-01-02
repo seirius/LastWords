@@ -15,11 +15,14 @@ import com.lastwords.ashley.spells.CastComponent
 import com.lastwords.ashley.spells.Spell
 import com.lastwords.ashley.spells.TargetComponent
 import com.lastwords.ashley.stats.StatsComponent
+import com.lastwords.ashley.tiledmap.TileNode
 import com.lastwords.ashley.tiledmap.TiledMapComponent
+import com.lastwords.ashley.tiledmap.getNodes
 import com.lastwords.ashley.velocity.VelocityComponent
 import com.lastwords.ashley.velocity.VelocitySystem
 import com.lastwords.states.PlayState
 import com.lastwords.states.State
+import com.lastwords.util.tileNode
 
 class PlayerBehaviourSystem(private var state: State): EntitySystem() {
 
@@ -65,6 +68,7 @@ class PlayerBehaviourSystem(private var state: State): EntitySystem() {
                 val tiledMapComponent = PlayState.tiledMapComponent
                 if (tiledMapComponent != null && positionComponent != null) {
                     val tiledMap = tiledMapComponent.tiledMap
+                    getNodes(tiledMap, positionComponent.position.tileNode(), targetComponent.target.tileNode())
                     val blocked = tiledMapComponent.isCellBlockedCoord(
                             positionComponent.position.x,
                             positionComponent.position.y

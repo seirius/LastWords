@@ -86,7 +86,7 @@ class PlayState(gameStateManager: GameStateManager): State(gameStateManager) {
 //        engine.addEntity(Wall(Vector2(126f, 64f), WallDirection.HORIZONTAL, 216f))
 //        engine.addEntity(Wall(Vector2(64f, 10f), WallDirection.VERTICAL, 248f))
 //        engine.addEntity(Wall(Vector2(64f, 118f), WallDirection.VERTICAL, 248f))
-//        engine.addEntity(Spawner(MobOne::class.java, Vector2(32f, 32f), 2f, 0))
+//        engine.addEntity(Spawner(MobOne::class.java, Vector2(32f, 32f), 1f, 0))
         val mobOne = MobOne()
         mobOne.setPosition(Vector2(100f, 100f))
         engine.addEntity(mobOne)
