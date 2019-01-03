@@ -68,6 +68,7 @@ fun getNodes(tiledMap: TiledMap, position: TileNode, target: TileNode): Array<Ar
             jsonCell.put("ot", originTarget)
             jsonCell.put("w", eks)
             jsonCell.put("h", tileNode.h)
+            jsonCell.put("g", tileNode.g)
             jsonRow.put(jsonCell)
         }
         jsonArray.put(jsonRow)
