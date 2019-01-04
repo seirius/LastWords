@@ -125,6 +125,8 @@ fun neighbors(tileMap: Array<Array<TileNode>>, node: TileNode): List<TileNode> {
 //    addNeighbor(1, 0)
 //    addNeighbor(0, -1)
 //    addNeighbor(0, 1)
+    val mapWidth = tileMap.size
+    val mapHeight = tileMap[0].size
 
     val offsets = mutableListOf(
             intArrayOf(-1, 0),
@@ -135,8 +137,7 @@ fun neighbors(tileMap: Array<Array<TileNode>>, node: TileNode): List<TileNode> {
     for (offset in offsets) {
         val xOffSetd = node.x + offset[0]
         val yOffSetd = node.y + offset[1]
-        if (xOffSetd > -1 && xOffSetd < tileMap.size - 1
-                && yOffSetd > -1 && yOffSetd < tileMap[0].size - 1) {
+        if (isTileInRange(xOffSetd, yOffSetd, mapWidth, mapHeight)) {
             val neighbor = tileMap[xOffSetd][yOffSetd].clone()
             if (neighbor.tileType != TileType.WALL) {
                 neighbor.parent = node
@@ -146,7 +147,19 @@ fun neighbors(tileMap: Array<Array<TileNode>>, node: TileNode): List<TileNode> {
         }
     }
 
+    var xOffsetd = node.x - 1
+    var yOffsetd = node.y + 1
+    if (isTileInRange(xOffsetd, yOffsetd, mapWidth, mapHeight)) {
+
+    }
+
+
     return neighbors
+}
+
+fun isTileInRange(x: Int, y: Int, maxWidth: Int, maxHeight: Int): Boolean {
+    return x > -1 && x < maxWidth - 1
+            && y > -1 && y < maxHeight - 1
 }
 
 fun getPath(tileMap: Array<Array<TileNode>>, origin: TileNode, target: TileNode): Array<TileNode> {
