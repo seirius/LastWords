@@ -6,6 +6,9 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.lastwords.states.GameStateManager
 import com.lastwords.states.PlayState
+import io.socket.client.IO
+import io.socket.client.Socket
+import io.socket.emitter.Emitter
 
 class LastWords : ApplicationAdapter() {
 
@@ -18,6 +21,15 @@ class LastWords : ApplicationAdapter() {
         gameStateManager = GameStateManager(spriteBatch)
         gameStateManager.push(PlayState(gameStateManager))
         //        gameStateManager.push(new MenuState(gameStateManager));
+
+        SOCKET = IO.socket("http://localhost:3000")
+        SOCKET!!.on(Socket.EVENT_CONNECT) {
+            println("hi")
+            SOCKET!!.emit("java-client", "hi")
+        }.on("new-tiles") {
+            println("new-tiles")
+        }
+        SOCKET!!.connect()
     }
 
     override fun render() {
@@ -40,5 +52,6 @@ class LastWords : ApplicationAdapter() {
         const val METER_TO_PIXEL = 32f
 //        const val PIXEL_TO_METER = 1f
         const val PIXEL_TO_METER = .03125f
+        var SOCKET: Socket? = null
     }
 }

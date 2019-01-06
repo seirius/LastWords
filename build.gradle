@@ -28,6 +28,7 @@ allprojects {
         box2DLightsVersion = '1.4'
         ashleyVersion = '1.7.0'
         aiVersion = '1.8.0'
+        httpCompVersion = '4.5.1'
     }
 
     repositories {
@@ -46,6 +47,9 @@ project(":desktop") {
     dependencies {
         compile project(":core")
         compile 'org.json:json:20171018'
+        compile group: 'io.socket', name: 'socket.io-client', version: '1.0.0'
+        compile group: 'org.apache.httpcomponents', name: 'httpclient', version: "$httpCompVersion"
+        compile group: 'org.apache.httpcomponents', name: 'httpmime', version: "$httpCompVersion"
         compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
@@ -84,6 +88,9 @@ project(":core") {
 
     dependencies {
         compile 'org.json:json:20171018'
+        compile group: 'io.socket', name: 'socket.io-client', version: '1.0.0'
+        compile group: 'org.apache.httpcomponents', name: 'httpclient', version: "$httpCompVersion"
+        compile group: 'org.apache.httpcomponents', name: 'httpmime', version: "$httpCompVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"

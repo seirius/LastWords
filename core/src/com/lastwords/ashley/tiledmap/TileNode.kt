@@ -1,10 +1,16 @@
 package com.lastwords.ashley.tiledmap
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer
+import com.lastwords.LastWords
+import org.apache.http.client.methods.HttpPost
+import org.apache.http.entity.ContentType
+import org.apache.http.entity.mime.MultipartEntityBuilder
+import org.apache.http.impl.client.HttpClientBuilder
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.File
+
 
 class TileNode(
     var x: Int = 0,
@@ -85,7 +91,16 @@ fun getNodes(tiledMap: TiledMap, origin: TileNode, target: TileNode): Array<Arra
         jsonArray.put(jsonRow)
     }
 
-    File("/home/andriy/dev/LastWordsWeb/tiles.json").writeText(jsonArray.toString())
+    LastWords.SOCKET!!.emit("java-client", jsonArray)
+    val createdPathJson = jsonArray.toString().toByteArray()
+
+    val builder = MultipartEntityBuilder.create()
+    builder.addBinaryBody("tiles", createdPathJson, ContentType.MULTIPART_FORM_DATA, "tiles.json")
+    val httpPost = HttpPost("http://localhost:3000/debug/a-star")
+    httpPost.entity = builder.build()
+    HttpClientBuilder.create().build().execute(httpPost)
+
+//    File("/home/andriy/dev/LastWordsWeb/tiles.json").writeText(jsonArray.toString())
 
     return map.toTypedArray()
 }
@@ -106,25 +121,6 @@ fun constructPath(node: TileNode): List<TileNode> {
 
 fun neighbors(tileMap: Array<Array<TileNode>>, node: TileNode): List<TileNode> {
     val neighbors = mutableListOf<TileNode>()
-//    val addNeighbor: (xOffset: Int, yOffset: Int) -> Any = {
-//        xOffset, yOffset -> {
-//            val xOffSetd = node.x + xOffset
-//            val yOffSetd = node.y + yOffset
-//            if (xOffSetd > -1 && xOffSetd < tileMap.size - 1
-//                && yOffSetd > -1 && yOffSetd < tileMap[0].size - 1) {
-//                val neighbor = tileMap[node.x + xOffSetd][node.y + yOffSetd].clone()
-//                if (neighbor.tileType != TileType.WALL) {
-//                    neighbor.parent = node
-//                    neighbor.g += 1
-//                    neighbors.add(neighbor)
-//                }
-//            }
-//        }
-//    }
-//    addNeighbor(-1, 0)
-//    addNeighbor(1, 0)
-//    addNeighbor(0, -1)
-//    addNeighbor(0, 1)
     val mapWidth = tileMap.size
     val mapHeight = tileMap[0].size
 
