@@ -91,16 +91,7 @@ fun getNodes(tiledMap: TiledMap, origin: TileNode, target: TileNode): Array<Arra
         jsonArray.put(jsonRow)
     }
 
-    LastWords.SOCKET!!.emit("java-client", jsonArray)
-    val createdPathJson = jsonArray.toString().toByteArray()
-
-    val builder = MultipartEntityBuilder.create()
-    builder.addBinaryBody("tiles", createdPathJson, ContentType.MULTIPART_FORM_DATA, "tiles.json")
-    val httpPost = HttpPost("http://localhost:3000/debug/a-star")
-    httpPost.entity = builder.build()
-    HttpClientBuilder.create().build().execute(httpPost)
-
-//    File("/home/andriy/dev/LastWordsWeb/tiles.json").writeText(jsonArray.toString())
+    LastWords.SOCKET!!.emit("kotlin-tiles", jsonArray)
 
     return map.toTypedArray()
 }

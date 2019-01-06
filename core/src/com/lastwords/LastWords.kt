@@ -24,10 +24,13 @@ class LastWords : ApplicationAdapter() {
 
         SOCKET = IO.socket("http://localhost:3000")
         SOCKET!!.on(Socket.EVENT_CONNECT) {
-            println("hi")
-            SOCKET!!.emit("java-client", "hi")
+            println("java connected")
         }.on("new-tiles") {
-            println("new-tiles")
+            println("new-tiles fired")
+        }.on("java-client") {
+            println("java-client fired")
+        }.on("vue-to-java") {
+            args -> println(args)
         }
         SOCKET!!.connect()
     }
