@@ -16,8 +16,8 @@ class TileNode(
     var x: Int = 0,
     var y: Int = 0,
     var h: Int = 0,
-    var g: Int = 0,
-    var f: Int = 0,
+    var g: Float = 0f,
+    var f: Float = 0f,
     var tileType: TileType = TileType.NOT_DEFINED,
     var origin: Boolean = false,
     var target: Boolean = false,
@@ -112,6 +112,7 @@ fun constructPath(node: TileNode): List<TileNode> {
 
 fun neighbors(tileMap: Array<Array<TileNode>>, node: TileNode): List<TileNode> {
     val neighbors = mutableListOf<TileNode>()
+    val vhSublings = mutableListOf<TileNode>()
     val mapWidth = tileMap.size
     val mapHeight = tileMap[0].size
 
@@ -119,7 +120,11 @@ fun neighbors(tileMap: Array<Array<TileNode>>, node: TileNode): List<TileNode> {
             intArrayOf(-1, 0),
             intArrayOf(1, 0),
             intArrayOf(0, -1),
-            intArrayOf(0, 1)
+            intArrayOf(0, 1),
+            intArrayOf(-1, -1, 0),
+            intArrayOf(1, -1, 0),
+            intArrayOf(-1, 1, 0),
+            intArrayOf(1, 1, 0)
     )
     for (offset in offsets) {
         val xOffSetd = node.x + offset[0]
@@ -128,18 +133,26 @@ fun neighbors(tileMap: Array<Array<TileNode>>, node: TileNode): List<TileNode> {
             val neighbor = tileMap[xOffSetd][yOffSetd].clone()
             if (neighbor.tileType != TileType.WALL) {
                 neighbor.parent = node
-                neighbor.g += 1
-                neighbors.add(neighbor)
+                if (offset.size == 2) {
+                    neighbor.g += 1
+                    neighbors.add(neighbor)
+                } else {
+                    var siblingHasWalls = false
+                    var i = 0
+                    while (i < vhSublings.size && !siblingHasWalls) {
+                        val sibling = vhSublings[i]
+                        siblingHasWalls = sibling.tileType == TileType.WALL && isDirectNeighbor(neighbor, sibling)
+                        i++
+                    }
+                    if (!siblingHasWalls) {
+                        neighbor.g += 1.43f
+                        neighbors.add(neighbor)
+                    }
+                }
             }
+            vhSublings.add(neighbor)
         }
     }
-
-    var xOffsetd = node.x - 1
-    var yOffsetd = node.y + 1
-    if (isTileInRange(xOffsetd, yOffsetd, mapWidth, mapHeight)) {
-
-    }
-
 
     return neighbors
 }
@@ -147,6 +160,12 @@ fun neighbors(tileMap: Array<Array<TileNode>>, node: TileNode): List<TileNode> {
 fun isTileInRange(x: Int, y: Int, maxWidth: Int, maxHeight: Int): Boolean {
     return x > -1 && x < maxWidth - 1
             && y > -1 && y < maxHeight - 1
+}
+
+fun isDirectNeighbor(node: TileNode, toNode: TileNode): Boolean {
+    val xOffset = Math.abs(node.x - toNode.x)
+    val yOffset = Math.abs(node.y - toNode.y)
+    return xOffset + yOffset == 1
 }
 
 fun getPath(tileMap: Array<Array<TileNode>>, origin: TileNode, target: TileNode): Array<TileNode> {
@@ -157,7 +176,7 @@ fun getPath(tileMap: Array<Array<TileNode>>, origin: TileNode, target: TileNode)
     val closedList = mutableListOf<TileNode>()
 
 
-    start.g = 0
+    start.g = 0f
     start.f = start.g + start.h
 
     while(openList.isNotEmpty()) {

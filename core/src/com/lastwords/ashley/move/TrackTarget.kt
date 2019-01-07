@@ -2,16 +2,25 @@ package com.lastwords.ashley.move
 
 import com.badlogic.ashley.core.*
 import com.badlogic.ashley.utils.ImmutableArray
+import com.lastwords.ashley.myashley.LWEntitySystem
 import com.lastwords.ashley.position.PositionComponent
 import com.lastwords.ashley.stats.StatsComponent
+import com.lastwords.ashley.tiledmap.getNodes
 import com.lastwords.ashley.velocity.VelocityComponent
 import com.lastwords.ashley.velocity.VelocitySystem
+import com.lastwords.states.TiledMapState
 import com.lastwords.util.angleMagnitudeToVector
 import com.lastwords.util.angleToTarget
+import com.lastwords.util.tileNode
 
-class TrackTargetComponent(var entity: Entity): Component
+class TrackTargetComponent(
+        var entity: Entity,
+        var aStarUpdate: Float = 0.3f,
+        var aStarCounter: Float = 0f,
+        var aStar: Boolean = true
+): Component
 
-class TrackTargetSystem: EntitySystem() {
+class TrackTargetSystem(var tiledMapState: TiledMapState): LWEntitySystem(tiledMapState) {
 
     private lateinit var entities: ImmutableArray<Entity>
 
@@ -40,10 +49,19 @@ class TrackTargetSystem: EntitySystem() {
                 val velocityComponent = velocityMapper.get(entity)
                 val statsComponent = statsMapper.get(entity)
 
-                val angle = positionComponent.position.angleToTarget(targetPositionComponent.position)
-                val finalSpeed = statsComponent.speed * VelocitySystem.SPEED_MULTIPLIER
+                if (trackTargetComponent.aStar) {
+                    if (trackTargetComponent.aStarCounter < trackTargetComponent.aStarUpdate) {
+                        trackTargetComponent.aStarCounter += deltaTime
+                    } else {
+                        trackTargetComponent.aStarCounter = 0f
+                        val path = getNodes(tiledMapState.tiledMap, positionComponent.position.tileNode(), targetPositionComponent.position.tileNode())
+                    }
+                } else {
+                    val angle = positionComponent.position.angleToTarget(targetPositionComponent.position)
+                    val finalSpeed = statsComponent.speed * VelocitySystem.SPEED_MULTIPLIER
 
-                velocityComponent.velocity = angleMagnitudeToVector(angle, finalSpeed)
+                    velocityComponent.velocity = angleMagnitudeToVector(angle, finalSpeed)
+                }
             }
         }
     }

@@ -3,6 +3,7 @@ package com.lastwords.states
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import com.lastwords.LastWords
@@ -40,4 +41,8 @@ abstract class State(protected var gameStateManager: GameStateManager) {
         var CURRENT_HEIGHT: Float = LastWords.HEIGHT.toFloat()
     }
 
+}
+
+interface TiledMapState {
+    var tiledMap: TiledMap
 }

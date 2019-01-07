@@ -56,7 +56,7 @@ class MobOne: Entity(), SpawnableClass {
         polygonShape.setAsBoxPixel(5.5f, 6f)
 
         val playerSensor = CircleShape()
-        playerSensor.setRadiusPixel(32f)
+        playerSensor.setRadiusPixel(190f)
         bodyComponent = BodyComponent(positionComponent.position, BodyDef.BodyType.DynamicBody)
         add(bodyComponent)
         add(FixtureComponent(

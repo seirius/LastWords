@@ -3,6 +3,7 @@ package com.lastwords.states
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
@@ -33,24 +34,26 @@ import com.lastwords.entities.gui.EnergyBar
 import com.lastwords.entities.gui.HealthPointsBar
 import com.lastwords.entities.gui.SpellSelectedBar
 
-class PlayState(gameStateManager: GameStateManager): State(gameStateManager) {
+class PlayState(gameStateManager: GameStateManager): State(gameStateManager), TiledMapState {
 
     private val ashleyEntity: AshleyEntity
     private val engine: Engine
     private val worldSystem: WorldSystem
+
+    override lateinit var tiledMap: TiledMap
 
     init {
         world = World(Vector2.Zero, true)
         worldSystem = WorldSystem(world!!)
         engine = gameStateManager.engine
         /**SYSTEMS**/
-        engine.addSystem(TiledMapSystem(camera))
+        engine.addSystem(TiledMapSystem(this, camera))
         engine.addSystem(worldSystem)
         engine.addSystem(PlayerBehaviourSystem(this))
         engine.addSystem(SpawnerSystem())
         engine.addSystem(CastSystem())
         engine.addSystem(MoveToTargetSystem())
-        engine.addSystem(TrackTargetSystem())
+        engine.addSystem(TrackTargetSystem(this))
         engine.addSystem(VelocitySystem())
         engine.addSystem(StatsSystem())
         engine.addSystem(DistanceLimitSystem())
@@ -67,6 +70,7 @@ class PlayState(gameStateManager: GameStateManager): State(gameStateManager) {
 
         /**ENTITIES**/
         val tiledEntity = Entity()
+        tiledMap = TmxMapLoader().load("new_map.tmx")
         PlayState.tiledMapComponent = TiledMapComponent(TmxMapLoader().load("new_map.tmx"))
         tiledEntity.add(PlayState.tiledMapComponent)
         engine.addEntity(tiledEntity)
