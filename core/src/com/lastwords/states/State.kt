@@ -7,6 +7,8 @@ import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import com.lastwords.LastWords
+import com.lastwords.ashley.tiledmap.NodeMap
+import com.lastwords.ashley.tiledmap.TileNode
 
 abstract class State(protected var gameStateManager: GameStateManager) {
 
@@ -45,4 +47,5 @@ abstract class State(protected var gameStateManager: GameStateManager) {
 
 interface TiledMapState {
     var tiledMap: TiledMap
+    var aiNodes: NodeMap
 }

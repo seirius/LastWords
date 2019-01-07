@@ -69,21 +69,6 @@ class PlayerBehaviourSystem(private var state: State): EntitySystem() {
                 if (tiledMapComponent != null && positionComponent != null) {
                     val tiledMap = tiledMapComponent.tiledMap
                     getNodes(tiledMap, positionComponent.position.tileNode(), targetComponent.target.tileNode())
-                    val blocked = tiledMapComponent.isCellBlockedCoord(
-                            positionComponent.position.x,
-                            positionComponent.position.y
-                    )
-                    println("is blocked $blocked at position ${positionComponent.position}")
-
-                    val aiNode = tiledMap.layers["ai_nodes"] as TiledMapTileLayer
-                    val cell = aiNode.getCell(
-                            (targetComponent.target.x / TiledMapComponent.TILE_SIZE).toInt(),
-                            (targetComponent.target.y / TiledMapComponent.TILE_SIZE).toInt()
-                    )
-
-                    if (cell != null) {
-                        println(cell.tile.properties["type"])
-                    }
                 }
                 entity.add(FireSpellComponent(Spell.S1))
             }

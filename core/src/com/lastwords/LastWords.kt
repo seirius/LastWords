@@ -16,12 +16,6 @@ class LastWords : ApplicationAdapter() {
     private lateinit var gameStateManager: GameStateManager
 
     override fun create() {
-        Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
-        spriteBatch = SpriteBatch()
-        gameStateManager = GameStateManager(spriteBatch)
-        gameStateManager.push(PlayState(gameStateManager))
-        //        gameStateManager.push(new MenuState(gameStateManager));
-
         SOCKET = IO.socket("http://localhost:3000")
         SOCKET!!.on(Socket.EVENT_CONNECT) {
             println("java connected")
@@ -33,6 +27,12 @@ class LastWords : ApplicationAdapter() {
             args -> println(args)
         }
         SOCKET!!.connect()
+
+        Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
+        spriteBatch = SpriteBatch()
+        gameStateManager = GameStateManager(spriteBatch)
+        gameStateManager.push(PlayState(gameStateManager))
+        //        gameStateManager.push(new MenuState(gameStateManager));
     }
 
     override fun render() {

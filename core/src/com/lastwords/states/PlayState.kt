@@ -7,6 +7,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
+import com.lastwords.LastWords
 import com.lastwords.ashley.animation.AnimationSystem
 import com.lastwords.ashley.animation.AshleyEntityAnimationSystem
 import com.lastwords.ashley.death.DeathSystem
@@ -22,9 +23,7 @@ import com.lastwords.ashley.player.PlayerBehaviourSystem
 import com.lastwords.ashley.spawner.SpawnerSystem
 import com.lastwords.ashley.spells.CastSystem
 import com.lastwords.ashley.stats.StatsSystem
-import com.lastwords.ashley.tiledmap.TiledMapComponent
-import com.lastwords.ashley.tiledmap.TiledMapSystem
-import com.lastwords.ashley.tiledmap.getObstacles
+import com.lastwords.ashley.tiledmap.*
 import com.lastwords.ashley.velocity.VelocitySystem
 import com.lastwords.ashley.world.CameraSystem
 import com.lastwords.ashley.world.WorldSystem
@@ -41,6 +40,7 @@ class PlayState(gameStateManager: GameStateManager): State(gameStateManager), Ti
     private val worldSystem: WorldSystem
 
     override lateinit var tiledMap: TiledMap
+    override lateinit var aiNodes: NodeMap
 
     init {
         world = World(Vector2.Zero, true)
@@ -71,10 +71,12 @@ class PlayState(gameStateManager: GameStateManager): State(gameStateManager), Ti
         /**ENTITIES**/
         val tiledEntity = Entity()
         tiledMap = TmxMapLoader().load("new_map.tmx")
-        PlayState.tiledMapComponent = TiledMapComponent(TmxMapLoader().load("new_map.tmx"))
+        aiNodes = tiledMap.createNodeMap("ai_nodes")
+        LastWords.SOCKET!!.emit("node-map", aiNodes.toJson())
+        PlayState.tiledMapComponent = TiledMapComponent(tiledMap)
         tiledEntity.add(PlayState.tiledMapComponent)
         engine.addEntity(tiledEntity)
-        val entities = PlayState.tiledMapComponent!!.tiledMap.getObstacles()
+        val entities = tiledMap.getObstacles()
         for (entity in entities) {
             engine.addEntity(entity)
         }
@@ -86,10 +88,6 @@ class PlayState(gameStateManager: GameStateManager): State(gameStateManager), Ti
         engine.addEntity(CastBar(ashleyEntity))
         engine.addEntity(SpellSelectedBar(ashleyEntity))
         engine.addEntity(EnergyBar(ashleyEntity))
-//        engine.addEntity(Wall(Vector2(2f, 64f), WallDirection.HORIZONTAL, 216f))
-//        engine.addEntity(Wall(Vector2(126f, 64f), WallDirection.HORIZONTAL, 216f))
-//        engine.addEntity(Wall(Vector2(64f, 10f), WallDirection.VERTICAL, 248f))
-//        engine.addEntity(Wall(Vector2(64f, 118f), WallDirection.VERTICAL, 248f))
 //        engine.addEntity(Spawner(MobOne::class.java, Vector2(32f, 32f), 1f, 0))
         val mobOne = MobOne()
         mobOne.setPosition(Vector2(100f, 100f))

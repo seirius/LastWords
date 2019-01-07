@@ -1,13 +1,11 @@
 package com.lastwords.ashley.tiledmap
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer
+import com.badlogic.gdx.math.Vector2
+import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.lastwords.LastWords
-import org.apache.http.client.methods.HttpPost
-import org.apache.http.entity.ContentType
-import org.apache.http.entity.mime.MultipartEntityBuilder
-import org.apache.http.impl.client.HttpClientBuilder
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -21,6 +19,7 @@ class TileNode(
     var tileType: TileType = TileType.NOT_DEFINED,
     var origin: Boolean = false,
     var target: Boolean = false,
+    @JsonIgnore
     var parent: TileNode? = null,
     var path: Boolean = false
 ) {
@@ -31,6 +30,55 @@ class TileNode(
     override fun equals(other: Any?): Boolean {
         return other != null && other is TileNode && other.x == x && other.y == y
     }
+
+    fun centeredPosition(): Vector2 {
+        return Vector2(
+                (this.x * TiledMapComponent.TILE_SIZE + TiledMapComponent.HALF_TILE_SIZE).toFloat(),
+                (this.y * TiledMapComponent.TILE_SIZE + TiledMapComponent.HALF_TILE_SIZE).toFloat()
+        )
+    }
+
+    override fun hashCode(): Int {
+        var result = x
+        result = 31 * result + y
+        result = 31 * result + h
+        result = 31 * result + g.hashCode()
+        result = 31 * result + f.hashCode()
+        result = 31 * result + tileType.hashCode()
+        result = 31 * result + origin.hashCode()
+        result = 31 * result + target.hashCode()
+        result = 31 * result + (parent?.hashCode() ?: 0)
+        result = 31 * result + path.hashCode()
+        return result
+    }
+}
+
+class NodeMap(
+    var tileNodes: Array<Array<TileNode>>
+) {
+
+    fun toJson(): String {
+        return ObjectMapper().writeValueAsString(this)
+    }
+
+}
+
+fun TiledMap.createNodeMap(layerName: String): NodeMap {
+    val map = mutableListOf<Array<TileNode>>()
+    val aiNodes = this.layers.get(layerName) as TiledMapTileLayer
+    for (x in (0 until aiNodes.width)) {
+        val rowsList = mutableListOf<TileNode>()
+        for (y in (0 until aiNodes.height)) {
+            val cell = aiNodes.getCell(x, y)
+            val tileNode = TileNode(x, y)
+            if (cell != null) {
+                tileNode.tileType = TileType.valueOf((cell.tile.properties["type"] as String))
+            }
+            rowsList.add(tileNode)
+        }
+        map.add(rowsList.toTypedArray())
+    }
+    return NodeMap(map.toTypedArray())
 }
 
 fun getNodes(tiledMap: TiledMap, origin: TileNode, target: TileNode): Array<Array<TileNode>> {
@@ -52,7 +100,6 @@ fun getNodes(tiledMap: TiledMap, origin: TileNode, target: TileNode): Array<Arra
             } else {
                 TileNode(x, y)
             }
-            tileNode.h = heuristic(tileNode, target)
             if (cell != null) {
                 tileNode.tileType = TileType.valueOf((cell.tile.properties["type"] as String))
             }
@@ -61,7 +108,7 @@ fun getNodes(tiledMap: TiledMap, origin: TileNode, target: TileNode): Array<Arra
         map.add(rowsList.toTypedArray())
     }
 
-    val path = getPath(map.toTypedArray(), origin, target)
+    val path = getPath(NodeMap(map.toTypedArray()), origin, target)
 
     val jsonArray = JSONArray()
     for (row in map) {
@@ -102,9 +149,11 @@ fun heuristic(position: TileNode, target: TileNode): Int {
 
 fun constructPath(node: TileNode): List<TileNode> {
     var auxNode = node
+    auxNode.path = true
     val path = mutableListOf(node)
     while (auxNode.parent != null) {
         auxNode = auxNode.parent!!
+        auxNode.path = true
         path.add(auxNode)
     }
     return path
@@ -168,7 +217,7 @@ fun isDirectNeighbor(node: TileNode, toNode: TileNode): Boolean {
     return xOffset + yOffset == 1
 }
 
-fun getPath(tileMap: Array<Array<TileNode>>, origin: TileNode, target: TileNode): Array<TileNode> {
+fun getPath(nodeMap: NodeMap, origin: TileNode, target: TileNode): Array<TileNode> {
     val start = origin.clone()
     val goal = target.clone()
 
@@ -176,8 +225,11 @@ fun getPath(tileMap: Array<Array<TileNode>>, origin: TileNode, target: TileNode)
     val closedList = mutableListOf<TileNode>()
 
 
+    start.h = heuristic(start, goal)
     start.g = 0f
     start.f = start.g + start.h
+    start.origin = true
+    goal.target = true
 
     while(openList.isNotEmpty()) {
         val current = openList.minBy { it -> it.f }
@@ -186,8 +238,9 @@ fun getPath(tileMap: Array<Array<TileNode>>, origin: TileNode, target: TileNode)
         }
         openList.remove(current)
         closedList.add(current!!)
-        for (neighbor in neighbors(tileMap, current)) {
+        for (neighbor in neighbors(nodeMap.tileNodes, current)) {
             if (neighbor !in closedList) {
+                neighbor.h = heuristic(neighbor, goal)
                 neighbor.f = neighbor.g + neighbor.h
                 if (neighbor !in openList) {
                     openList.add(neighbor.clone())
@@ -203,4 +256,8 @@ fun getPath(tileMap: Array<Array<TileNode>>, origin: TileNode, target: TileNode)
     }
 
     return mutableListOf<TileNode>().toTypedArray()
+}
+
+fun Array<TileNode>.toJson(): String {
+    return ObjectMapper().writeValueAsString(this)
 }

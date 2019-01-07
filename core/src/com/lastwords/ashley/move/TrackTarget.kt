@@ -2,12 +2,16 @@ package com.lastwords.ashley.move
 
 import com.badlogic.ashley.core.*
 import com.badlogic.ashley.utils.ImmutableArray
+import com.lastwords.LastWords
 import com.lastwords.ashley.myashley.LWEntitySystem
 import com.lastwords.ashley.position.PositionComponent
 import com.lastwords.ashley.stats.StatsComponent
 import com.lastwords.ashley.tiledmap.getNodes
+import com.lastwords.ashley.tiledmap.getPath
+import com.lastwords.ashley.tiledmap.toJson
 import com.lastwords.ashley.velocity.VelocityComponent
 import com.lastwords.ashley.velocity.VelocitySystem
+import com.lastwords.states.PlayState
 import com.lastwords.states.TiledMapState
 import com.lastwords.util.angleMagnitudeToVector
 import com.lastwords.util.angleToTarget
@@ -20,7 +24,7 @@ class TrackTargetComponent(
         var aStar: Boolean = true
 ): Component
 
-class TrackTargetSystem(var tiledMapState: TiledMapState): LWEntitySystem(tiledMapState) {
+class TrackTargetSystem(tiledMapState: TiledMapState): LWEntitySystem(tiledMapState) {
 
     private lateinit var entities: ImmutableArray<Entity>
 
@@ -54,7 +58,19 @@ class TrackTargetSystem(var tiledMapState: TiledMapState): LWEntitySystem(tiledM
                         trackTargetComponent.aStarCounter += deltaTime
                     } else {
                         trackTargetComponent.aStarCounter = 0f
-                        val path = getNodes(tiledMapState.tiledMap, positionComponent.position.tileNode(), targetPositionComponent.position.tileNode())
+                        val path = getPath(tiledMapState.aiNodes,
+                                positionComponent.position.tileNode(),
+                                targetPositionComponent.position.tileNode())
+                        LastWords.SOCKET!!.emit("entity-path", path.toJson())
+                        if (path.isNotEmpty()) {
+                            var nextNode = path.last()
+                            if (nextNode == positionComponent.position.tileNode() && path.size > 1) {
+                                nextNode = path[path.size - 2]
+                            }
+                            val angle = positionComponent.position.angleToTarget(nextNode.centeredPosition())
+                            val finalSpeed = statsComponent.speed * VelocitySystem.SPEED_MULTIPLIER
+                            velocityComponent.velocity = angleMagnitudeToVector(angle, finalSpeed)
+                        }
                     }
                 } else {
                     val angle = positionComponent.position.angleToTarget(targetPositionComponent.position)

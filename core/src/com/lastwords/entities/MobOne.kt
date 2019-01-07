@@ -110,7 +110,9 @@ object MobOneSensor: ContactImpl {
     private val statsMapper = ComponentMapper.getFor(StatsComponent::class.java)
 
     override fun contact(thisEntity: Entity, contactSensor: ContactSensor, engine: Engine) {
-        if (contactSensor.entity is MobOne || !contactSensor.linkedState || contactSensor.entity is Wall) {
+        if (contactSensor.entity is MobOne
+                || !contactSensor.linkedState
+                || contactSensor.fixtureType == FixtureType.WALL) {
             return
         }
 

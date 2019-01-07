@@ -29,6 +29,7 @@ allprojects {
         ashleyVersion = '1.7.0'
         aiVersion = '1.8.0'
         httpCompVersion = '4.5.1'
+        jacksonVersion = '2.9.8'
     }
 
     repositories {
@@ -43,10 +44,12 @@ allprojects {
 project(":desktop") {
     apply plugin: "java"
 
-
     dependencies {
         compile project(":core")
         compile 'org.json:json:20171018'
+        compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: "$jacksonVersion"
+        implementation "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
+        compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: "$jacksonVersion"
         compile group: 'io.socket', name: 'socket.io-client', version: '1.0.0'
         compile group: 'org.apache.httpcomponents', name: 'httpclient', version: "$httpCompVersion"
         compile group: 'org.apache.httpcomponents', name: 'httpmime', version: "$httpCompVersion"
@@ -88,6 +91,9 @@ project(":core") {
 
     dependencies {
         compile 'org.json:json:20171018'
+        compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: "$jacksonVersion"
+        implementation "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
+        compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: "$jacksonVersion"
         compile group: 'io.socket', name: 'socket.io-client', version: '1.0.0'
         compile group: 'org.apache.httpcomponents', name: 'httpclient', version: "$httpCompVersion"
         compile group: 'org.apache.httpcomponents', name: 'httpmime', version: "$httpCompVersion"
