@@ -5,7 +5,6 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer
 import com.badlogic.gdx.math.Vector2
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.lastwords.LastWords
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -138,7 +137,7 @@ fun getNodes(tiledMap: TiledMap, origin: TileNode, target: TileNode): Array<Arra
         jsonArray.put(jsonRow)
     }
 
-    LastWords.SOCKET!!.emit("kotlin-tiles", jsonArray)
+//    LastWords.SOCKET!!.emit("kotlin-tiles", jsonArray)
 
     return map.toTypedArray()
 }

@@ -72,7 +72,7 @@ class PlayState(gameStateManager: GameStateManager): State(gameStateManager), Ti
         val tiledEntity = Entity()
         tiledMap = TmxMapLoader().load("new_map.tmx")
         aiNodes = tiledMap.createNodeMap("ai_nodes")
-        LastWords.SOCKET!!.emit("node-map", aiNodes.toJson())
+//        LastWords.SOCKET!!.emit("node-map", aiNodes.toJson())
         PlayState.tiledMapComponent = TiledMapComponent(tiledMap)
         tiledEntity.add(PlayState.tiledMapComponent)
         engine.addEntity(tiledEntity)

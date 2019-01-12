@@ -4,11 +4,15 @@ import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.lastwords.mqtt.LastMqtt
+import com.lastwords.mqtt.LastMqttData
 import com.lastwords.states.GameStateManager
 import com.lastwords.states.PlayState
-import io.socket.client.IO
-import io.socket.client.Socket
-import io.socket.emitter.Emitter
+import org.eclipse.paho.client.mqttv3.MqttAsyncClient
+import org.eclipse.paho.client.mqttv3.MqttClient
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions
+import org.eclipse.paho.client.mqttv3.MqttMessage
 
 class LastWords : ApplicationAdapter() {
 
@@ -16,17 +20,15 @@ class LastWords : ApplicationAdapter() {
     private lateinit var gameStateManager: GameStateManager
 
     override fun create() {
-        SOCKET = IO.socket("http://localhost:3000")
-        SOCKET!!.on(Socket.EVENT_CONNECT) {
-            println("java connected")
-        }.on("new-tiles") {
-            println("new-tiles fired")
-        }.on("java-client") {
-            println("java-client fired")
-        }.on("vue-to-java") {
-            args -> println(args)
+
+        val lastMqtt = LastMqtt("tcp://localhost:1883")
+        lastMqtt.emit("emit-topic", LastMqttData(hashMapOf(
+                "hola" to "hola"
+        )))
+
+        lastMqtt.on("emit-topic") {
+            println(it.data)
         }
-        SOCKET!!.connect()
 
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         spriteBatch = SpriteBatch()
@@ -55,6 +57,5 @@ class LastWords : ApplicationAdapter() {
         const val METER_TO_PIXEL = 32f
 //        const val PIXEL_TO_METER = 1f
         const val PIXEL_TO_METER = .03125f
-        var SOCKET: Socket? = null
     }
 }

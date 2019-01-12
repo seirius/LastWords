@@ -30,6 +30,7 @@ allprojects {
         aiVersion = '1.8.0'
         httpCompVersion = '4.5.1'
         jacksonVersion = '2.9.8'
+        mqttVersion = '1.2.0'
     }
 
     repositories {
@@ -47,10 +48,11 @@ project(":desktop") {
     dependencies {
         compile project(":core")
         compile 'org.json:json:20171018'
+        compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.+"
+        compile "org.eclipse.paho:org.eclipse.paho.client.mqttv3:${mqttVersion}"
         compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: "$jacksonVersion"
         implementation "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
         compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: "$jacksonVersion"
-        compile group: 'io.socket', name: 'socket.io-client', version: '1.0.0'
         compile group: 'org.apache.httpcomponents', name: 'httpclient', version: "$httpCompVersion"
         compile group: 'org.apache.httpcomponents', name: 'httpmime', version: "$httpCompVersion"
         compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
@@ -91,10 +93,11 @@ project(":core") {
 
     dependencies {
         compile 'org.json:json:20171018'
+        compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.+"
+        compile "org.eclipse.paho:org.eclipse.paho.client.mqttv3:${mqttVersion}"
         compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: "$jacksonVersion"
         implementation "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
         compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: "$jacksonVersion"
-        compile group: 'io.socket', name: 'socket.io-client', version: '1.0.0'
         compile group: 'org.apache.httpcomponents', name: 'httpclient', version: "$httpCompVersion"
         compile group: 'org.apache.httpcomponents', name: 'httpmime', version: "$httpCompVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
