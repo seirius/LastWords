@@ -3,10 +3,13 @@ package com.lastwords.mqtt
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.eclipse.paho.client.mqttv3.*
+import java.util.*
 
 class LastMqtt(hostName: String) {
 
-    private val mqttClient: MqttAsyncClient = MqttAsyncClient(hostName, MqttAsyncClient.generateClientId())
+    private val clientId = "unique"
+//    private val clientId = MqttAsyncClient.generateClientId()
+    private val mqttClient: MqttAsyncClient = MqttAsyncClient(hostName, clientId)
     private val objectMapper = ObjectMapper()
     private val topics: HashMap<String, MutableList<LastMqttEvent>> = hashMapOf()
 
@@ -23,7 +26,12 @@ class LastMqtt(hostName: String) {
                 try {
                     if (message != null) {
                         val payload: LastMqttData = objectMapper.readValue(message.payload, LastMqttData::class.java)
-                        topics[topic]?.forEach { event -> event.callback(payload) }
+                        val events = topics[topic]
+                        if (events != null) {
+                            for (i in events.size downTo 1) {
+                                events[i - 1].callback(payload)
+                            }
+                        }
                     }
                 } catch(e: Exception) {
                     e.printStackTrace()
@@ -34,15 +42,51 @@ class LastMqtt(hostName: String) {
         })
     }
 
-    public fun emit(topic: String, payload: LastMqttData) {
+    fun emit(topic: String, payload: LastMqttData) {
         val mqttMsg = MqttMessage()
         mqttMsg.payload = objectMapper.writeValueAsBytes(payload)
         mqttClient.publish(topic, mqttMsg)
     }
 
-    public fun on(topic: String, callback: (payload: LastMqttData) -> Unit) {
-        this.addListener(topic, LastMqttEvent(callback))
+    fun on(topic: String, event: LastMqttEvent) {
+        this.addListener(topic, event)
     }
+
+
+    fun get(
+            topic: String,
+            payload: LastMqttData = LastMqttData(hashMapOf<Any, Any>()),
+            event: LastMqttEvent
+    ) {
+        val requestTopic = "request:$topic"
+        payload.requestId = UUID.randomUUID().toString()
+        emit(requestTopic, payload)
+        var resolveGet: LastMqttEvent? = null
+        resolveGet = LastMqttEvent {
+            if (it.requestId == payload.requestId) {
+                event.callback(it)
+                removeListener(topic, resolveGet!!)
+            }
+        }
+        on(topic, resolveGet)
+    }
+
+    fun requestMapper(
+            topic: String,
+            callback: LastMqttEvent
+    ) {
+        on("request:$topic", LastMqttEvent {
+            var payloadResponse = callback.callback(it)
+            if (payloadResponse == null) {
+                payloadResponse = LastMqttData(hashMapOf<Any, Any>())
+            }
+            if (payloadResponse is LastMqttData) {
+                payloadResponse.requestId = it.requestId
+                emit(topic, payloadResponse)
+            }
+        })
+    }
+
 
     private fun addListener(topic: String, event: LastMqttEvent) {
         if (topics.containsKey(topic)) {
@@ -53,6 +97,10 @@ class LastMqtt(hostName: String) {
         }
     }
 
+    private fun removeListener(topic: String, event: LastMqttEvent) {
+        topics[topic]?.removeIf { topic in topics && it == event }
+    }
+
 }
 
-class LastMqttEvent(val callback: (payload: LastMqttData) -> Unit)
+class LastMqttEvent(val callback: (payload: LastMqttData) -> Any?)

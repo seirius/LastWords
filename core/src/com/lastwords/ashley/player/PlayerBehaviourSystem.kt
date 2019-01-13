@@ -7,6 +7,7 @@ import com.badlogic.gdx.Input
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
+import com.lastwords.LastWords
 import com.lastwords.ashley.entities.EntityStateComponent
 import com.lastwords.ashley.orders.CastOrderComponent
 import com.lastwords.ashley.orders.FireSpellComponent
@@ -20,6 +21,7 @@ import com.lastwords.ashley.tiledmap.TiledMapComponent
 import com.lastwords.ashley.tiledmap.getNodes
 import com.lastwords.ashley.velocity.VelocityComponent
 import com.lastwords.ashley.velocity.VelocitySystem
+import com.lastwords.mqtt.LastMqttEvent
 import com.lastwords.states.PlayState
 import com.lastwords.states.State
 import com.lastwords.util.tileNode
@@ -69,6 +71,9 @@ class PlayerBehaviourSystem(private var state: State): EntitySystem() {
                 if (tiledMapComponent != null && positionComponent != null) {
                     val tiledMap = tiledMapComponent.tiledMap
                     getNodes(tiledMap, positionComponent.position.tileNode(), targetComponent.target.tileNode())
+                    LastWords.MQTT.get("get-test", event = LastMqttEvent {
+                        println(it.data)
+                    })
                 }
                 entity.add(FireSpellComponent(Spell.S1))
             }

@@ -4,15 +4,9 @@ import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.lastwords.mqtt.LastMqtt
-import com.lastwords.mqtt.LastMqttData
 import com.lastwords.states.GameStateManager
 import com.lastwords.states.PlayState
-import org.eclipse.paho.client.mqttv3.MqttAsyncClient
-import org.eclipse.paho.client.mqttv3.MqttClient
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions
-import org.eclipse.paho.client.mqttv3.MqttMessage
 
 class LastWords : ApplicationAdapter() {
 

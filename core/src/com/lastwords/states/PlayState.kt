@@ -33,6 +33,7 @@ import com.lastwords.entities.gui.EnergyBar
 import com.lastwords.entities.gui.HealthPointsBar
 import com.lastwords.entities.gui.SpellSelectedBar
 import com.lastwords.mqtt.LastMqttData
+import com.lastwords.mqtt.LastMqttEvent
 
 class PlayState(gameStateManager: GameStateManager): State(gameStateManager), TiledMapState {
 
@@ -73,11 +74,7 @@ class PlayState(gameStateManager: GameStateManager): State(gameStateManager), Ti
         val tiledEntity = Entity()
         tiledMap = TmxMapLoader().load("new_map.tmx")
         aiNodes = tiledMap.createNodeMap("ai_nodes")
-        LastWords.MQTT.emit("node-map", LastMqttData(aiNodes))
-        LastWords.MQTT.on("get-node-map") {
-            LastWords.MQTT.emit("node-map", LastMqttData(aiNodes))
-        }
-//        LastWords.SOCKET!!.emit("node-map", aiNodes.toJson())
+        LastWords.MQTT.requestMapper("get-node-map", LastMqttEvent { LastMqttData(aiNodes) })
         PlayState.tiledMapComponent = TiledMapComponent(tiledMap)
         tiledEntity.add(PlayState.tiledMapComponent)
         engine.addEntity(tiledEntity)
