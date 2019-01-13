@@ -32,6 +32,7 @@ import com.lastwords.entities.gui.CastBar
 import com.lastwords.entities.gui.EnergyBar
 import com.lastwords.entities.gui.HealthPointsBar
 import com.lastwords.entities.gui.SpellSelectedBar
+import com.lastwords.mqtt.LastMqttData
 
 class PlayState(gameStateManager: GameStateManager): State(gameStateManager), TiledMapState {
 
@@ -72,6 +73,10 @@ class PlayState(gameStateManager: GameStateManager): State(gameStateManager), Ti
         val tiledEntity = Entity()
         tiledMap = TmxMapLoader().load("new_map.tmx")
         aiNodes = tiledMap.createNodeMap("ai_nodes")
+        LastWords.MQTT.emit("node-map", LastMqttData(aiNodes))
+        LastWords.MQTT.on("get-node-map") {
+            LastWords.MQTT.emit("node-map", LastMqttData(aiNodes))
+        }
 //        LastWords.SOCKET!!.emit("node-map", aiNodes.toJson())
         PlayState.tiledMapComponent = TiledMapComponent(tiledMap)
         tiledEntity.add(PlayState.tiledMapComponent)
@@ -90,7 +95,7 @@ class PlayState(gameStateManager: GameStateManager): State(gameStateManager), Ti
         engine.addEntity(EnergyBar(ashleyEntity))
 //        engine.addEntity(Spawner(MobOne::class.java, Vector2(32f, 32f), 1f, 0))
         val mobOne = MobOne()
-        mobOne.setPosition(Vector2(100f, 100f))
+        mobOne.setPosition(Vector2(150f, 150f))
         engine.addEntity(mobOne)
 //        engine.addEntity(Spawner(MobOne::class.java, Vector2(220f, -220f), 1f, 0))
 //        engine.addEntity(Spawner(MobOne::class.java, Vector2(-220f, 220f), 1f, 0))

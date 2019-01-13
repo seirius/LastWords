@@ -20,16 +20,6 @@ class LastWords : ApplicationAdapter() {
     private lateinit var gameStateManager: GameStateManager
 
     override fun create() {
-
-        val lastMqtt = LastMqtt("tcp://localhost:1883")
-        lastMqtt.emit("emit-topic", LastMqttData(hashMapOf(
-                "hola" to "hola"
-        )))
-
-        lastMqtt.on("emit-topic") {
-            println(it.data)
-        }
-
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         spriteBatch = SpriteBatch()
         gameStateManager = GameStateManager(spriteBatch)
@@ -57,5 +47,6 @@ class LastWords : ApplicationAdapter() {
         const val METER_TO_PIXEL = 32f
 //        const val PIXEL_TO_METER = 1f
         const val PIXEL_TO_METER = .03125f
+        val MQTT = LastMqtt("tcp://localhost:1883")
     }
 }
