@@ -9,7 +9,7 @@ import java.util.Stack
 
 class GameStateManager(var spriteBatch: SpriteBatch) {
 
-    private val states: Stack<State> = Stack()
+    val states: Stack<State> = Stack()
     val engine: Engine = Engine()
 
     fun setMainSystems() {

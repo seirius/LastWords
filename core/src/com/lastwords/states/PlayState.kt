@@ -7,7 +7,6 @@ import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
-import com.lastwords.LastWords
 import com.lastwords.ashley.animation.AnimationSystem
 import com.lastwords.ashley.animation.AshleyEntityAnimationSystem
 import com.lastwords.ashley.death.DeathSystem
@@ -27,15 +26,19 @@ import com.lastwords.ashley.tiledmap.*
 import com.lastwords.ashley.velocity.VelocitySystem
 import com.lastwords.ashley.world.CameraSystem
 import com.lastwords.ashley.world.WorldSystem
-import com.lastwords.entities.*
+import com.lastwords.entities.AshleyEntity
+import com.lastwords.entities.MobOne
 import com.lastwords.entities.gui.CastBar
 import com.lastwords.entities.gui.EnergyBar
 import com.lastwords.entities.gui.HealthPointsBar
 import com.lastwords.entities.gui.SpellSelectedBar
-import com.lastwords.mqtt.LastMqttData
-import com.lastwords.mqtt.LastMqttEvent
+import com.lastwords.eventlistener.EventListener
+import com.lastwords.eventlistener.LastEventEmitter
 
-class PlayState(gameStateManager: GameStateManager): State(gameStateManager), TiledMapState {
+class PlayState(
+        gameStateManager: GameStateManager,
+        override val eventListener: EventListener
+): State(gameStateManager), TiledMapState, LastEventEmitter {
 
     private val ashleyEntity: AshleyEntity
     private val engine: Engine
@@ -55,7 +58,7 @@ class PlayState(gameStateManager: GameStateManager): State(gameStateManager), Ti
         engine.addSystem(SpawnerSystem())
         engine.addSystem(CastSystem())
         engine.addSystem(MoveToTargetSystem())
-        engine.addSystem(TrackTargetSystem(this))
+        engine.addSystem(TrackTargetSystem(this, eventListener))
         engine.addSystem(VelocitySystem())
         engine.addSystem(StatsSystem())
         engine.addSystem(DistanceLimitSystem())
@@ -74,7 +77,6 @@ class PlayState(gameStateManager: GameStateManager): State(gameStateManager), Ti
         val tiledEntity = Entity()
         tiledMap = TmxMapLoader().load("new_map.tmx")
         aiNodes = tiledMap.createNodeMap("ai_nodes")
-        LastWords.MQTT.requestMapper("get-node-map", LastMqttEvent { LastMqttData(aiNodes) })
         PlayState.tiledMapComponent = TiledMapComponent(tiledMap)
         tiledEntity.add(PlayState.tiledMapComponent)
         engine.addEntity(tiledEntity)

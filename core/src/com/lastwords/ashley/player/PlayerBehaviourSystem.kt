@@ -71,9 +71,6 @@ class PlayerBehaviourSystem(private var state: State): EntitySystem() {
                 if (tiledMapComponent != null && positionComponent != null) {
                     val tiledMap = tiledMapComponent.tiledMap
                     getNodes(tiledMap, positionComponent.position.tileNode(), targetComponent.target.tileNode())
-                    LastWords.MQTT.get("get-test", event = LastMqttEvent {
-                        println(it.data)
-                    })
                 }
                 entity.add(FireSpellComponent(Spell.S1))
             }

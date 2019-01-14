@@ -10,6 +10,9 @@ import com.lastwords.ashley.tiledmap.getPath
 import com.lastwords.ashley.tiledmap.toJson
 import com.lastwords.ashley.velocity.VelocityComponent
 import com.lastwords.ashley.velocity.VelocitySystem
+import com.lastwords.eventlistener.EventListener
+import com.lastwords.eventlistener.EventPayload
+import com.lastwords.eventlistener.LastEventEmitter
 import com.lastwords.mqtt.LastMqttData
 import com.lastwords.states.TiledMapState
 import com.lastwords.util.angleMagnitudeToVector
@@ -23,7 +26,10 @@ class TrackTargetComponent(
         var aStar: Boolean = true
 ): Component
 
-class TrackTargetSystem(tiledMapState: TiledMapState): LWEntitySystem(tiledMapState) {
+class TrackTargetSystem(
+        tiledMapState: TiledMapState,
+        override val eventListener: EventListener
+): LWEntitySystem(tiledMapState), LastEventEmitter {
 
     private lateinit var entities: ImmutableArray<Entity>
 
@@ -60,8 +66,7 @@ class TrackTargetSystem(tiledMapState: TiledMapState): LWEntitySystem(tiledMapSt
                         val path = getPath(tiledMapState.aiNodes,
                                 positionComponent.position.tileNode(),
                                 targetPositionComponent.position.tileNode())
-                        LastWords.MQTT.emit("entity-path", LastMqttData(path))
-//                        LastWords.SOCKET!!.emit("entity-path", path.toJson())
+                        eventListener.emit("entity-path", EventPayload(path))
                         if (path.isNotEmpty()) {
                             var nextNode = path.last()
                             if (nextNode == positionComponent.position.tileNode() && path.size > 1) {

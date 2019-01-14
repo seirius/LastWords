@@ -5,10 +5,13 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.eclipse.paho.client.mqttv3.*
 import java.util.*
 
-class LastMqtt(hostName: String) {
+class LastMqtt(
+        hostName: String,
+        val onConnect: (success: Boolean) -> Unit
+) {
 
-    private val clientId = "unique"
-//    private val clientId = MqttAsyncClient.generateClientId()
+//    private val clientId = "unique"
+    private val clientId = MqttAsyncClient.generateClientId()
     private val mqttClient: MqttAsyncClient = MqttAsyncClient(hostName, clientId)
     private val objectMapper = ObjectMapper()
     private val topics: HashMap<String, MutableList<LastMqttEvent>> = hashMapOf()
@@ -20,7 +23,15 @@ class LastMqtt(hostName: String) {
         mqttOptions.isCleanSession = true
         mqttOptions.keepAliveInterval = 30
 
-        mqttClient.connect(mqttOptions)
+        mqttClient.connect(mqttOptions, null, object : IMqttActionListener {
+            override fun onSuccess(asyncActionToken: IMqttToken?) {
+                onConnect(true)
+            }
+
+            override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
+                onConnect(true)
+            }
+        })
         mqttClient.setCallback(object : MqttCallback {
             override fun messageArrived(topic: String?, message: MqttMessage?) {
                 try {

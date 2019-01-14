@@ -4,7 +4,11 @@ import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.lastwords.eventlistener.EventListener
+import com.lastwords.eventlistener.EventPayload
 import com.lastwords.mqtt.LastMqtt
+import com.lastwords.mqtt.LastMqttData
+import com.lastwords.mqtt.LastMqttEvent
 import com.lastwords.states.GameStateManager
 import com.lastwords.states.PlayState
 
@@ -12,13 +16,39 @@ class LastWords : ApplicationAdapter() {
 
     private lateinit var spriteBatch: SpriteBatch
     private lateinit var gameStateManager: GameStateManager
+    private var eventListener = EventListener()
+    private lateinit var lastMqtt: LastMqtt
 
     override fun create() {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         spriteBatch = SpriteBatch()
         gameStateManager = GameStateManager(spriteBatch)
-        gameStateManager.push(PlayState(gameStateManager))
+        gameStateManager.push(PlayState(gameStateManager, eventListener))
         //        gameStateManager.push(new MenuState(gameStateManager));
+
+        try {
+            lastMqtt = LastMqtt(LastWords.MQTT_HOST) {
+                if (it) {
+                    lastMqtt.requestMapper("get-node-map", LastMqttEvent {
+                        for (i in (0 until gameStateManager.states.size)) {
+                            val state = gameStateManager.states[i]
+                            if (state is PlayState) {
+                                return@LastMqttEvent LastMqttData(state.aiNodes)
+                            }
+                        }
+                    })
+
+                    eventListener.on("entity-path") {
+                        lastMqtt.emit("entity-path", LastMqttData(it.data))
+                    }
+                } else {
+                    println("Coulnd't connect to MQTT at ${LastWords.MQTT_HOST}")
+                }
+            }
+        } catch(e: Exception) {
+            e.printStackTrace()
+            println("Coulnd't connect to MQTT at ${LastWords.MQTT_HOST}")
+        }
     }
 
     override fun render() {
@@ -41,6 +71,6 @@ class LastWords : ApplicationAdapter() {
         const val METER_TO_PIXEL = 32f
 //        const val PIXEL_TO_METER = 1f
         const val PIXEL_TO_METER = .03125f
-        val MQTT = LastMqtt("tcp://localhost:1883")
+        const val MQTT_HOST = "tcp://localhost:1883"
     }
 }
