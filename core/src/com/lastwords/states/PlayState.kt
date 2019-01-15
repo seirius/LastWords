@@ -1,7 +1,10 @@
 package com.lastwords.states
 
+import com.badlogic.ashley.core.ComponentMapper
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
+import com.badlogic.ashley.core.Family
+import com.badlogic.ashley.utils.ImmutableArray
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
@@ -19,6 +22,7 @@ import com.lastwords.ashley.entities.EntityStateSystem
 import com.lastwords.ashley.move.MoveToTargetSystem
 import com.lastwords.ashley.move.TrackTargetSystem
 import com.lastwords.ashley.player.PlayerBehaviourSystem
+import com.lastwords.ashley.position.PositionComponent
 import com.lastwords.ashley.spawner.SpawnerSystem
 import com.lastwords.ashley.spells.CastSystem
 import com.lastwords.ashley.stats.StatsSystem
@@ -47,10 +51,16 @@ class PlayState(
     override lateinit var tiledMap: TiledMap
     override lateinit var aiNodes: NodeMap
 
+    private var entityPositions: ImmutableArray<Entity>
+    private val positionMapper = ComponentMapper.getFor(PositionComponent::class.java)
+
     init {
         world = World(Vector2.Zero, true)
         worldSystem = WorldSystem(world!!)
         engine = gameStateManager.engine
+
+        entityPositions = engine.getEntitiesFor(Family.all(PositionComponent::class.java).get())
+
         /**SYSTEMS**/
         engine.addSystem(TiledMapSystem(this, camera))
         engine.addSystem(worldSystem)
@@ -87,7 +97,6 @@ class PlayState(
 
         ashleyEntity = AshleyEntity(64f, 64f, 35f)
         engine.addEntity(ashleyEntity)
-//        engine.addEntity(Prometheus(Vector2(200f, 200f)))
         engine.addEntity(HealthPointsBar(ashleyEntity))
         engine.addEntity(CastBar(ashleyEntity))
         engine.addEntity(SpellSelectedBar(ashleyEntity))
@@ -96,9 +105,6 @@ class PlayState(
         val mobOne = MobOne()
         mobOne.setPosition(Vector2(150f, 150f))
         engine.addEntity(mobOne)
-//        engine.addEntity(Spawner(MobOne::class.java, Vector2(220f, -220f), 1f, 0))
-//        engine.addEntity(Spawner(MobOne::class.java, Vector2(-220f, 220f), 1f, 0))
-//        engine.addEntity(Spawner(MobOne::class.java, Vector2(220f, 220f), 1f, 0))
     }
 
     override fun handleInput() {
@@ -116,6 +122,14 @@ class PlayState(
 
     override fun dispose() {
         PlayState.world = null
+    }
+
+    fun getAllEntityPositions(): MutableList<PositionComponent> {
+        val positions = mutableListOf<PositionComponent>()
+        for (entity in entityPositions) {
+            positions.add(positionMapper.get(entity))
+        }
+        return positions
     }
 
     companion object {

@@ -38,6 +38,15 @@ class LastWords : ApplicationAdapter() {
                         }
                     })
 
+                    lastMqtt.requestMapper("get-entity-list", LastMqttEvent {
+                        for (i in (0 until gameStateManager.states.size)) {
+                            val state = gameStateManager.states[i]
+                            if (state is PlayState) {
+                                return@LastMqttEvent LastMqttData(state.getAllEntityPositions())
+                            }
+                        }
+                    })
+
                     eventListener.on("entity-path") {
                         lastMqtt.emit("entity-path", LastMqttData(it.data))
                     }
