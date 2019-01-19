@@ -1,9 +1,15 @@
 package com.lastwords
 
+import com.badlogic.ashley.core.Entity
+import com.badlogic.ashley.core.EntityListener
+import com.badlogic.ashley.core.Family
+import com.badlogic.ashley.utils.ImmutableArray
 import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.lastwords.ashley.move.TrackTargetComponent
+import com.lastwords.entities.MobOne
 import com.lastwords.eventlistener.EventListener
 import com.lastwords.eventlistener.EventPayload
 import com.lastwords.mqtt.LastMqtt
@@ -11,6 +17,7 @@ import com.lastwords.mqtt.LastMqttData
 import com.lastwords.mqtt.LastMqttEvent
 import com.lastwords.states.GameStateManager
 import com.lastwords.states.PlayState
+import com.lastwords.util.STATS
 
 class LastWords : ApplicationAdapter() {
 
@@ -26,9 +33,19 @@ class LastWords : ApplicationAdapter() {
         gameStateManager.push(PlayState(gameStateManager, eventListener))
         //        gameStateManager.push(new MenuState(gameStateManager));
 
+        val mobOneEntities: ImmutableArray<Entity> = gameStateManager.engine.getEntitiesFor(
+                Family.all(TrackTargetComponent::class.java).get()
+        )
+
         try {
             lastMqtt = LastMqtt(LastWords.MQTT_HOST) {
                 if (it) {
+                    lastMqtt.requestMapper("entities/mobone-list", LastMqttEvent {
+                        return@LastMqttEvent LastMqttData(mobOneEntities.map { entity ->
+                            entity.toString()
+                        })
+                    })
+
                     lastMqtt.requestMapper("get-node-map", LastMqttEvent {
                         for (i in (0 until gameStateManager.states.size)) {
                             val state = gameStateManager.states[i]
@@ -45,6 +62,21 @@ class LastWords : ApplicationAdapter() {
                                 return@LastMqttEvent LastMqttData(state.getAllEntityPositions())
                             }
                         }
+                    })
+
+                    gameStateManager.engine.addEntityListener(object : EntityListener {
+                        override fun entityRemoved(entity: Entity?) {
+                            if (entity is MobOne) {
+                                lastMqtt.emit("entities/mob-one/removed", LastMqttData(entity.toString()))
+                            }
+                        }
+
+                        override fun entityAdded(entity: Entity?) {
+                            if (entity is MobOne) {
+                                lastMqtt.emit("entities/mob-one/added", LastMqttData(entity.toString()))
+                            }
+                        }
+
                     })
 
                     eventListener.on("entity-path") {

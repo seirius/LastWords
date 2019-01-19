@@ -32,6 +32,7 @@ import com.lastwords.ashley.world.CameraSystem
 import com.lastwords.ashley.world.WorldSystem
 import com.lastwords.entities.AshleyEntity
 import com.lastwords.entities.MobOne
+import com.lastwords.entities.Spawner
 import com.lastwords.entities.gui.CastBar
 import com.lastwords.entities.gui.EnergyBar
 import com.lastwords.entities.gui.HealthPointsBar
@@ -101,7 +102,7 @@ class PlayState(
         engine.addEntity(CastBar(ashleyEntity))
         engine.addEntity(SpellSelectedBar(ashleyEntity))
         engine.addEntity(EnergyBar(ashleyEntity))
-//        engine.addEntity(Spawner(MobOne::class.java, Vector2(32f, 32f), 1f, 0))
+        engine.addEntity(Spawner(MobOne::class.java, Vector2(32f, 32f), 1f, 0))
         val mobOne = MobOne()
         mobOne.setPosition(Vector2(150f, 150f))
         engine.addEntity(mobOne)
