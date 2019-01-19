@@ -1,8 +1,11 @@
 package com.lastwords.ashley.stats
 
 import com.badlogic.ashley.core.Component
+import java.util.*
 
 class StatsComponent : Component {
+
+    val ID: String = UUID.randomUUID().toString()
 
     var speed: Float = 0f
 

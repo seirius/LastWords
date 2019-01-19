@@ -41,9 +41,7 @@ class LastWords : ApplicationAdapter() {
             lastMqtt = LastMqtt(LastWords.MQTT_HOST) {
                 if (it) {
                     lastMqtt.requestMapper("entities/mobone-list", LastMqttEvent {
-                        return@LastMqttEvent LastMqttData(mobOneEntities.map { entity ->
-                            entity.toString()
-                        })
+                        return@LastMqttEvent LastMqttData(mobOneEntities.map { entity -> STATS[entity].ID })
                     })
 
                     lastMqtt.requestMapper("get-node-map", LastMqttEvent {
@@ -67,13 +65,13 @@ class LastWords : ApplicationAdapter() {
                     gameStateManager.engine.addEntityListener(object : EntityListener {
                         override fun entityRemoved(entity: Entity?) {
                             if (entity is MobOne) {
-                                lastMqtt.emit("entities/mob-one/removed", LastMqttData(entity.toString()))
+                                lastMqtt.emit("entities/mob-one/removed", LastMqttData(STATS[entity].ID))
                             }
                         }
 
                         override fun entityAdded(entity: Entity?) {
                             if (entity is MobOne) {
-                                lastMqtt.emit("entities/mob-one/added", LastMqttData(entity.toString()))
+                                lastMqtt.emit("entities/mob-one/added", LastMqttData(STATS[entity].ID))
                             }
                         }
 

@@ -21,6 +21,8 @@ import com.lastwords.ashley.draw.TextSystem
 import com.lastwords.ashley.entities.EntityStateSystem
 import com.lastwords.ashley.move.MoveToTargetSystem
 import com.lastwords.ashley.move.TrackTargetSystem
+import com.lastwords.ashley.outsidetracker.OutsideTrackeable
+import com.lastwords.ashley.outsidetracker.OutsideTracker
 import com.lastwords.ashley.player.PlayerBehaviourSystem
 import com.lastwords.ashley.position.PositionComponent
 import com.lastwords.ashley.spawner.SpawnerSystem
@@ -42,8 +44,9 @@ import com.lastwords.eventlistener.LastEventEmitter
 
 class PlayState(
         gameStateManager: GameStateManager,
-        override val eventListener: EventListener
-): State(gameStateManager), TiledMapState, LastEventEmitter {
+        override val eventListener: EventListener,
+        override val outsideTracker: OutsideTracker
+): State(gameStateManager), TiledMapState, LastEventEmitter, OutsideTrackeable {
 
     private val ashleyEntity: AshleyEntity
     private val engine: Engine
