@@ -53,7 +53,7 @@ class AshleyEntityAnimationSystem : EntitySystem() {
             val animationComponent = animationMapper.get(entity)
             animationComponent.currentAnimation = null
             if (entityStateComponent.state == EntityState.STILL) {
-                animationComponent.currentAnimation = animationComponent.animationStill
+                animationComponent.currentAnimation = animationComponent.animationIdle
             } else if (entityStateComponent.state == EntityState.MOVING) {
                 if (entityStateComponent.moveDirection == MoveDirection.DOWN ||
                         entityStateComponent.moveDirection == MoveDirection.RIGHT ||

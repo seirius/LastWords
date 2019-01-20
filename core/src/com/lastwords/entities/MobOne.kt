@@ -11,7 +11,10 @@ import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.CircleShape
 import com.badlogic.gdx.physics.box2d.PolygonShape
 import com.lastwords.LastWords
+import com.lastwords.ashley.animation.AnimationChunk
 import com.lastwords.ashley.animation.AnimationComponent
+import com.lastwords.ashley.animation.AnimationType
+import com.lastwords.ashley.animation.generateRegions
 import com.lastwords.ashley.body.BodyComponent
 import com.lastwords.ashley.body.ContactSensor
 import com.lastwords.ashley.body.FixtureComponent
@@ -72,31 +75,39 @@ class MobOne: Entity(), SpawnableClass {
         var texture = Texture("micro/PNG/Human/mob_one.png")
         val size = 8
         var tmpRight = TextureRegion.split(texture, texture.width / size, texture.height)
-        val walkRight: Array<TextureRegion?> = Array(size - 4) { null }
-        var index = 0
-        for (i in (0 until size)) {
-            if (i > 3) {
-                walkRight[index++] = tmpRight[0][i]
-            }
-        }
-
-        texture = Texture("micro/PNG/Human/mob_one_left.png")
-        var tmpLeft = TextureRegion.split(texture, texture.width / size, texture.height)
-        val walkLeft: Array<TextureRegion?> = Array(size - 4) { null }
-        index = 0
-        for (i in (0 until size)) {
-            if (i < 4) {
-                walkLeft[index++] = tmpLeft[0][i]
-            }
-        }
-        walkLeft.reverse()
-
-        val walkRightAnimation = Animation<TextureRegion>(0.15f, *walkRight)
-        val walkLeftAnimation = Animation<TextureRegion>(0.15f, *walkLeft)
-        val stillAnimation = Animation<TextureRegion>(1f, tmpRight[0][2])
-
-        add(TextureComponent())
-        add(AnimationComponent(stillAnimation, walkLeftAnimation, walkRightAnimation))
+//        val walkRight: Array<TextureRegion?> = Array(size - 4) { null }
+//        var index = 0
+//        for (i in (0 until size)) {
+//            if (i > 3) {
+//                walkRight[index++] = tmpRight[0][i]
+//            }
+//        }
+//        val animationComponent = AnimationComponent().generateRegions()
+//        val chunk = AnimationChunk(AnimationType.WALK_RIGHT, arrayOf(4, 5, 6, 7))
+//        generateRegions(
+//                path = "micro/PNG/Human/mob_one.png",
+//                cols = 8, rows = 1,
+//                chunks = arrayOf(chunk)
+//        )
+//        val walkRight = chunk.regions!!
+//
+//        texture = Texture("micro/PNG/Human/mob_one_left.png")
+//        var tmpLeft = TextureRegion.split(texture, texture.width / size, texture.height)
+//        val walkLeft: Array<TextureRegion?> = Array(size - 4) { null }
+//        var index = 0
+//        for (i in (0 until size)) {
+//            if (i < 4) {
+//                walkLeft[index++] = tmpLeft[0][i]
+//            }
+//        }
+//        walkLeft.reverse()
+//
+//        val walkRightAnimation = Animation<TextureRegion>(0.15f, *walkRight)
+//        val walkLeftAnimation = Animation<TextureRegion>(0.15f, *walkLeft)
+//        val stillAnimation = Animation<TextureRegion>(1f, tmpRight[0][2])
+//
+//        add(TextureComponent())
+//        add(AnimationComponent(stillAnimation, walkLeftAnimation, walkRightAnimation))
     }
 
     override fun setPosition(position: Vector2) {
