@@ -79,8 +79,8 @@ class AshleyEntity(xPosition: Float, yPosition: Float, speed: Float) : Entity() 
             still[index++] = tmpStill[0][i]
         }
         add(TextureComponent())
-        add(AnimationComponent(Animation<TextureRegion>(0.75f, *still), Animation<TextureRegion>(0.25f, *walkLeft),
-                Animation<TextureRegion>(0.25f, *walkRight)))
+//        add(AnimationComponent(Animation<TextureRegion>(0.75f, *still), Animation<TextureRegion>(0.25f, *walkLeft),
+//                Animation<TextureRegion>(0.25f, *walkRight)))
     }
 
 }

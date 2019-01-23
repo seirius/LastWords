@@ -9,6 +9,9 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.CircleShape
 import com.badlogic.gdx.physics.box2d.PolygonShape
+import com.lastwords.ashley.animation.AnimationChunk
+import com.lastwords.ashley.animation.AnimationComponent
+import com.lastwords.ashley.animation.AnimationType
 import com.lastwords.ashley.body.BodyComponent
 import com.lastwords.ashley.body.ContactSensor
 import com.lastwords.ashley.body.FixtureComponent
@@ -21,6 +24,7 @@ import com.lastwords.ashley.spawner.SpawnableClass
 import com.lastwords.ashley.stats.Damage
 import com.lastwords.ashley.stats.PropertiesComponent
 import com.lastwords.ashley.stats.StatsComponent
+import com.lastwords.ashley.texture.TextureComponent
 import com.lastwords.ashley.velocity.VelocityComponent
 import com.lastwords.ashley.world.ContactComponent
 import com.lastwords.ashley.world.ContactImpl
@@ -63,9 +67,18 @@ class MobOne: Entity(), SpawnableClass {
 
         add(ContactComponent())
 
-        var texture = Texture("micro/PNG/Human/mob_one.png")
-        val size = 8
-        var tmpRight = TextureRegion.split(texture, texture.width / size, texture.height)
+//        var texture = Texture("micro/PNG/Human/mob_one.png")
+        add(TextureComponent())
+        add(AnimationComponent()
+        .generateRegions(
+                path = "micro/PNG/Human/mob_one.png",
+                rows = 2, cols = 5,
+                chunks = arrayOf(
+                        AnimationChunk(AnimationType.IDLE, .15f, arrayOf(0)),
+                        AnimationChunk(AnimationType.WALK_RIGHT, .15f, arrayOf(1, 2, 3, 4)),
+                        AnimationChunk(AnimationType.WALK_LEFT, .15f, arrayOf(5, 6, 7, 8))
+                )))
+//        var tmpRight = TextureRegion.split(texture, texture.width / size, texture.height)
 //        val walkRight: Array<TextureRegion?> = Array(size - 4) { null }
 //        var index = 0
 //        for (i in (0 until size)) {

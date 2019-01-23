@@ -71,8 +71,8 @@ class Prometheus(
             walkLeft[index++] = tmpLeft[0][i]
         }
         add(TextureComponent())
-        add(AnimationComponent(Animation<TextureRegion>(0.25f, *walkRight), Animation<TextureRegion>(0.25f, *walkLeft),
-                Animation<TextureRegion>(0.25f, *walkRight), Animation<TextureRegion>(0.25f, *walkRight)))
+//        add(AnimationComponent(Animation<TextureRegion>(0.25f, *walkRight), Animation<TextureRegion>(0.25f, *walkLeft),
+//                Animation<TextureRegion>(0.25f, *walkRight), Animation<TextureRegion>(0.25f, *walkRight)))
     }
 
 }

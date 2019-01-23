@@ -102,7 +102,7 @@ class PlayState(
         engine.addEntity(CastBar(ashleyEntity))
         engine.addEntity(SpellSelectedBar(ashleyEntity))
         engine.addEntity(EnergyBar(ashleyEntity))
-        engine.addEntity(Spawner(MobOne::class.java, Vector2(32f, 32f), 1f, 0))
+        engine.addEntity(Spawner(MobOne::class.java, Vector2(32f, 32f), 3f, 0))
         val mobOne = MobOne()
         mobOne.setPosition(Vector2(150f, 150f))
         engine.addEntity(mobOne)

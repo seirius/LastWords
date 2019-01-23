@@ -73,7 +73,7 @@ class Projectile(
         }
         val animation = Animation<TextureRegion>(0.15f, *walk)
         add(TextureComponent())
-        add(AnimationComponent(animation, animation, animation, animation))
+//        add(AnimationComponent(animation, animation, animation, animation))
     }
 
 }

@@ -8,9 +8,9 @@ import java.lang.IllegalArgumentException
 
 class AnimationComponent : Component {
 
-    lateinit var animationIdle: Animation<TextureRegion>
-    lateinit var animationWalkLeft: Animation<TextureRegion>
-    lateinit var animationWalkRight: Animation<TextureRegion>
+    var animationIdle: Animation<TextureRegion>? = null
+    var animationWalkLeft: Animation<TextureRegion>? = null
+    var animationWalkRight: Animation<TextureRegion>? = null
     var currentAnimation: Animation<TextureRegion>? = null
     var animationTime: Float = 0f
 
@@ -20,13 +20,15 @@ class AnimationComponent : Component {
             rows: Int,
             cols: Int,
             chunks: Array<AnimationChunk>
-    ) {
+    ): AnimationComponent {
         if (texture == null && path == null) {
             throw IllegalArgumentException("Mate, what?. Path AND Texture are null.")
         }
 
         val tex: Texture = texture?: Texture(path) ?: texture!!
 
+        println(tex.width)
+        println(tex.height)
         val textureRegions = TextureRegion.split(tex, tex.width / cols, tex.height / rows)
 
         for (chunk in chunks) {
@@ -45,6 +47,7 @@ class AnimationComponent : Component {
                 }
             }
         }
+        return this
     }
 
 }
