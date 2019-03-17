@@ -27,8 +27,6 @@ class AnimationComponent : Component {
 
         val tex: Texture = texture?: Texture(path) ?: texture!!
 
-        println(tex.width)
-        println(tex.height)
         val textureRegions = TextureRegion.split(tex, tex.width / cols, tex.height / rows)
 
         for (chunk in chunks) {

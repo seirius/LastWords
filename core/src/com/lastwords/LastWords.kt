@@ -81,12 +81,12 @@ class LastWords : ApplicationAdapter() {
                         lastMqtt.emit("entity-path", LastMqttData(it.data))
                     }
                 } else {
-                    println("Coulnd't connect to MQTT at ${LastWords.MQTT_HOST}")
+                    println("Couldn't connect to MQTT at ${LastWords.MQTT_HOST}")
                 }
             }
         } catch(e: Exception) {
             e.printStackTrace()
-            println("Coulnd't connect to MQTT at ${LastWords.MQTT_HOST}")
+            println("Couldn't connect to MQTT at ${LastWords.MQTT_HOST}")
         }
     }
 

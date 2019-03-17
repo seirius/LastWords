@@ -28,13 +28,14 @@ class DrawSystem(private val spriteBatch: SpriteBatch?) : EntitySystem() {
         for (entity in entities!!) {
             val positionComponent = positionMapper.get(entity)
             val textureComponent = textureMapper.get(entity)
-            if (textureComponent.textureRegion != null) {
-                textureWidth = textureComponent.textureRegion!!.regionWidth.toFloat()
-                textureHeight = textureComponent.textureRegion!!.regionHeight.toFloat()
+            val textureRegion = textureComponent.textureRegion
+            if (textureRegion != null) {
+                textureWidth = textureRegion.regionWidth.toFloat()
+                textureHeight = textureRegion.regionHeight.toFloat()
                 xTexture = positionComponent.position.x - textureWidth / 2f
                 yTexture = positionComponent.position.y - textureHeight / 2f
                 spriteBatch
-                        .draw(textureComponent.textureRegion, xTexture, yTexture, textureWidth, textureHeight)
+                        .draw(textureRegion, xTexture, yTexture, textureWidth, textureHeight)
             }
         }
         spriteBatch.end()
