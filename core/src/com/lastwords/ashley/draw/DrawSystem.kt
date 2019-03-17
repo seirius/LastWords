@@ -32,8 +32,8 @@ class DrawSystem(private val spriteBatch: SpriteBatch?) : EntitySystem() {
             if (textureRegion != null) {
                 textureWidth = textureRegion.regionWidth.toFloat()
                 textureHeight = textureRegion.regionHeight.toFloat()
-                xTexture = positionComponent.position.x - textureWidth / 2f
-                yTexture = positionComponent.position.y - textureHeight / 2f
+                xTexture = positionComponent.position.x - textureWidth / 2f + textureComponent.xOffset
+                yTexture = positionComponent.position.y - textureHeight / 2f + textureComponent.yOffset
                 spriteBatch
                         .draw(textureRegion, xTexture, yTexture, textureWidth, textureHeight)
             }

@@ -33,9 +33,8 @@ class LastWords : ApplicationAdapter() {
         gameStateManager.push(PlayState(gameStateManager, eventListener))
         //        gameStateManager.push(new MenuState(gameStateManager));
 
-        val mobOneEntities: ImmutableArray<Entity> = gameStateManager.engine.getEntitiesFor(
-                Family.all(TrackTargetComponent::class.java).get()
-        )
+        val mobOneEntities: ImmutableArray<Entity> = gameStateManager.engine
+                .getEntitiesFor(Family.all(TrackTargetComponent::class.java).get())
 
         try {
             lastMqtt = LastMqtt(LastWords.MQTT_HOST) {

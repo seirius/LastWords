@@ -35,7 +35,7 @@ class AshleyEntity(xPosition: Float, yPosition: Float, speed: Float) : Entity() 
         val propertiesComponent = PropertiesComponent(6f, 6f)
         add(propertiesComponent)
         val polygonShape = PolygonShape()
-        polygonShape.setAsBoxPixel(7.5f, 8.5f)
+        polygonShape.setAsBoxPixel(9f, 9f)
         val bodyComponent = BodyComponent(Vector2(xPosition, yPosition), BodyDef.BodyType.DynamicBody)
         add(bodyComponent)
         add(FixtureComponent(bodyComponent.body, mutableListOf(
@@ -57,7 +57,7 @@ class AshleyEntity(xPosition: Float, yPosition: Float, speed: Float) : Entity() 
         add(TargetComponent())
         add(ContactComponent())
 
-        add(TextureComponent())
+        add(TextureComponent(yOffset = 4f))
         add(AnimationComponent()
                 .generateRegions(
                         path = "adv.png",
