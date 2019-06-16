@@ -11,12 +11,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.lastwords.ashley.move.TrackTargetComponent
 import com.lastwords.entities.MobOne
 import com.lastwords.eventlistener.EventListener
-import com.lastwords.eventlistener.EventPayload
 import com.lastwords.mqtt.LastMqtt
 import com.lastwords.mqtt.LastMqttData
 import com.lastwords.mqtt.LastMqttEvent
 import com.lastwords.states.GameStateManager
 import com.lastwords.states.PlayState
+import com.lastwords.states.TestState
 import com.lastwords.util.STATS
 
 class LastWords : ApplicationAdapter() {
@@ -30,14 +30,15 @@ class LastWords : ApplicationAdapter() {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         spriteBatch = SpriteBatch()
         gameStateManager = GameStateManager(spriteBatch)
-        gameStateManager.push(PlayState(gameStateManager, eventListener))
+//        gameStateManager.push(PlayState(gameStateManager, eventListener))
+        gameStateManager.push(TestState(gameStateManager, eventListener))
         //        gameStateManager.push(new MenuState(gameStateManager));
 
         val mobOneEntities: ImmutableArray<Entity> = gameStateManager.engine
                 .getEntitiesFor(Family.all(TrackTargetComponent::class.java).get())
 
         try {
-            lastMqtt = LastMqtt(LastWords.MQTT_HOST) {
+            lastMqtt = LastMqtt(MQTT_HOST) {
                 if (it) {
                     lastMqtt.requestMapper("entities/mobone-list", LastMqttEvent {
                         return@LastMqttEvent LastMqttData(mobOneEntities.map { entity -> STATS[entity].ID })
@@ -76,16 +77,16 @@ class LastWords : ApplicationAdapter() {
 
                     })
 
-                    eventListener.on("entity-path") {
-                        lastMqtt.emit("entity-path", LastMqttData(it.data))
+                    eventListener.on("entity-path") { it1 ->
+                        lastMqtt.emit("entity-path", LastMqttData(it1.data))
                     }
                 } else {
-                    println("Couldn't connect to MQTT at ${LastWords.MQTT_HOST}")
+                    println("Couldn't connect to MQTT at $MQTT_HOST")
                 }
             }
         } catch(e: Exception) {
             e.printStackTrace()
-            println("Couldn't connect to MQTT at ${LastWords.MQTT_HOST}")
+            println("Couldn't connect to MQTT at $MQTT_HOST")
         }
     }
 

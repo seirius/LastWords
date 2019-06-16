@@ -31,8 +31,6 @@ import com.lastwords.ashley.velocity.VelocitySystem
 import com.lastwords.ashley.world.CameraSystem
 import com.lastwords.ashley.world.WorldSystem
 import com.lastwords.entities.AshleyEntity
-import com.lastwords.entities.MobOne
-import com.lastwords.entities.Spawner
 import com.lastwords.entities.gui.CastBar
 import com.lastwords.entities.gui.EnergyBar
 import com.lastwords.entities.gui.HealthPointsBar
@@ -88,8 +86,8 @@ class PlayState(
         val tiledEntity = Entity()
         tiledMap = TmxMapLoader().load("new_map.tmx")
         aiNodes = tiledMap.createNodeMap("ai_nodes")
-        PlayState.tiledMapComponent = TiledMapComponent(tiledMap)
-        tiledEntity.add(PlayState.tiledMapComponent)
+        tiledMapComponent = TiledMapComponent(tiledMap)
+        tiledEntity.add(tiledMapComponent)
         engine.addEntity(tiledEntity)
         val entities = tiledMap.getObstacles()
         for (entity in entities) {
@@ -122,7 +120,7 @@ class PlayState(
     }
 
     override fun dispose() {
-        PlayState.world = null
+        world = null
     }
 
     fun getAllEntityPositions(): MutableList<PositionComponent> {

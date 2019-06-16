@@ -1,14 +1,9 @@
 package com.lastwords.entities
 
 import com.badlogic.ashley.core.Entity
-import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.Animation
-import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.BodyDef
-import com.badlogic.gdx.physics.box2d.CircleShape
 import com.badlogic.gdx.physics.box2d.PolygonShape
-import com.lastwords.LastWords
 import com.lastwords.ashley.animation.AnimationChunk
 import com.lastwords.ashley.animation.AnimationComponent
 import com.lastwords.ashley.animation.AnimationType
@@ -68,32 +63,6 @@ class AshleyEntity(xPosition: Float, yPosition: Float, speed: Float) : Entity() 
                                 AnimationChunk(AnimationType.WALK_LEFT, .075f, (117..122).toList().toTypedArray())
                         )))
 
-//        val texture = Texture("micro/PNG/Human/temp.png")
-//        val tmp = TextureRegion.split(texture, texture.width / 4, texture.height)
-//        val walkRight: Array<TextureRegion?> = Array(4) { null }
-//        var index = 0
-//        for (j in (0..3)) {
-//            walkRight[index++] = tmp[0][j]
-//        }
-//
-//        val textureLeft = Texture("micro/PNG/Human/temp_left.png")
-//        val tmpLeft = TextureRegion.split(textureLeft, textureLeft.width / 4, texture.height)
-//        val walkLeft: Array<TextureRegion?> = Array(4) { null }
-//        index = 0
-//        for (i in (0..3)) {
-//            walkLeft[index++] = tmpLeft[0][i]
-//        }
-//
-//        val textureStill = Texture("micro/PNG/Human/temp_still.png")
-//        val tmpStill = TextureRegion.split(textureStill, textureStill.width / 2, texture.height)
-//        val still: Array<TextureRegion?> = Array(2) { null }
-//        index = 0
-//        for (i in (0..1)) {
-//            still[index++] = tmpStill[0][i]
-//        }
-//        add(TextureComponent())
-//        add(AnimationComponent(Animation<TextureRegion>(0.75f, *still), Animation<TextureRegion>(0.25f, *walkLeft),
-//                Animation<TextureRegion>(0.25f, *walkRight)))
     }
 
 }

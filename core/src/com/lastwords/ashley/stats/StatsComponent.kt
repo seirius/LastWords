@@ -1,6 +1,7 @@
 package com.lastwords.ashley.stats
 
 import com.badlogic.ashley.core.Component
+import com.badlogic.ashley.core.ComponentMapper
 import java.util.*
 
 class StatsComponent : Component {
@@ -20,6 +21,11 @@ class StatsComponent : Component {
     var attack: Int = 0
 
     var damageReceived: MutableList<Damage> = mutableListOf()
+
+    companion object {
+        val MAPPER: ComponentMapper<StatsComponent>
+                = ComponentMapper.getFor(StatsComponent::class.java)
+    }
 
 }
 

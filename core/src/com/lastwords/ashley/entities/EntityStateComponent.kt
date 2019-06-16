@@ -9,9 +9,15 @@ class EntityStateComponent : Component {
     var castState: Boolean = false
     var moveDirection: MoveDirection = MoveDirection.DOWN
     var state: EntityState = EntityState.STILL
+    var movementState = EntityMovementState.CAN_MOVE
 
     fun toggleCastState() {
         castState = !castState
+    }
+
+    companion object {
+        val MAPPER: ComponentMapper<EntityStateComponent>
+                = ComponentMapper.getFor(EntityStateComponent::class.java)
     }
 
 }
@@ -47,4 +53,8 @@ enum class MoveDirection {
 
 enum class EntityState {
     MOVING, STILL
+}
+
+enum class EntityMovementState {
+    CAN_MOVE, CANT_MOVE
 }

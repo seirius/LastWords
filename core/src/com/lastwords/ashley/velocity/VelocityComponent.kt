@@ -1,6 +1,7 @@
 package com.lastwords.ashley.velocity
 
 import com.badlogic.ashley.core.Component
+import com.badlogic.ashley.core.ComponentMapper
 import com.badlogic.gdx.math.Vector2
 
 class VelocityComponent : Component {
@@ -18,6 +19,11 @@ class VelocityComponent : Component {
 
     fun stop() {
         velocity = Vector2()
+    }
+
+    companion object {
+        val MAPPER: ComponentMapper<VelocityComponent>
+                = ComponentMapper.getFor(VelocityComponent::class.java)
     }
 
 }
